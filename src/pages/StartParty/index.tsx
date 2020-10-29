@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
-const StartParty: React.FC = () => <h1>Start Party</h1>;
+function StartParty(): ReactElement {
+  return <h1>Start Party</h1>;
+}
 
 export default StartParty;

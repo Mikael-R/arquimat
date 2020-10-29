@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import trophyImg from '../../assets/icons/trophy.svg';
@@ -20,39 +20,41 @@ const landingImgs: string[] = [
   landing5Img,
 ];
 
-const Landing: React.FC = () => (
-  <div id="page-landing">
-    <div className="container" id="page-landing-content">
-      <div className="logo-container">
-        <Logo />
-        <h2>Divirta-se aprendendo!</h2>
+function Landing(): ReactElement {
+  return (
+    <div id="page-landing">
+      <div className="container" id="page-landing-content">
+        <div className="logo-container">
+          <Logo />
+          <h2>Divirta-se aprendendo!</h2>
+        </div>
+
+        <img
+          width="360"
+          height="260"
+          src={landingImgs[randInt(0, landingImgs.length)]}
+          alt="Arquimat"
+          className="game-image"
+        />
+
+        <div className="buttons-container">
+          <Link to="/start-party" className="start-party">
+            Jogar
+          </Link>
+          <Link to="/player-status" className="player-status">
+            Estatísticas
+          </Link>
+        </div>
+
+        <span className="total-wins">
+          Total de
+          {` ${0} `}
+          partidas ganhas.
+          <img src={trophyImg} alt="Troféu" />
+        </span>
       </div>
-
-      <img
-        width="360"
-        height="260"
-        src={landingImgs[randInt(0, landingImgs.length)]}
-        alt="Arquimat"
-        className="game-image"
-      />
-
-      <div className="buttons-container">
-        <Link to="/start-party" className="start-party">
-          Jogar
-        </Link>
-        <Link to="/player-status" className="player-status">
-          Estatísticas
-        </Link>
-      </div>
-
-      <span className="total-wins">
-        Total de
-        {` ${0} `}
-        partidas ganhas.
-        <img src={trophyImg} alt="Troféu" />
-      </span>
     </div>
-  </div>
-);
+  );
+}
 
 export default Landing;

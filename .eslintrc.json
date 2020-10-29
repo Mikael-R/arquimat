@@ -64,7 +64,8 @@
         "tsx": "never",
         "css": "always"
       }
-    ]
+    ],
+    "react/prop-types": ["off"]
   },
   "settings": {
     "import/resolver": {

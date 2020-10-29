@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import './styles/global.css';
 import Routes from './routes';
 
-const App: React.FC = () => <Routes />;
+const App = (): ReactElement => <Routes />;
 
 export default App;

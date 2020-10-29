@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
-const PlayerStatus: React.FC = () => <h1>Player Status</h1>;
+function PlayerStatus(): ReactElement {
+  return <h1>Player Status</h1>;
+}
 
 export default PlayerStatus;
