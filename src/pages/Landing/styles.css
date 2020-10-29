@@ -12,6 +12,7 @@
 
 .logo-container img {
   height: 10rem;
+  width: 35rem;
 }
 
 .game-image {
@@ -57,13 +58,13 @@
 .buttons-container a img {
   margin-right: 2.4rem;
 }
-.buttons-container a.search-party {
+.buttons-container a.start-party {
   background: var(--color-primary-lighter);
 }
 .buttons-container a.player-status {
   background: var(--color-secundary);
 }
-.buttons-container a.search-party:hover {
+.buttons-container a.start-party:hover {
   background: var(--color-primary-light);
 }
 .buttons-container a.player-status:hover {

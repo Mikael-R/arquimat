@@ -1,34 +1,46 @@
+/* eslint-disable global-require */
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import trophyImg from '../../assets/images/icons/trophy.png';
-import landingImg from '../../assets/images/landing.svg';
+import trophyImg from '../../assets/images/icons/trophy.svg';
 import logoImg from '../../assets/images/logo.png';
+import randInt from '../../tools/randInt';
 
 import './styles.css';
+
+const landingImgs: string[] = [
+  require('../../assets/images/landing-1.svg'),
+  require('../../assets/images/landing-2.svg'),
+  require('../../assets/images/landing-3.svg'),
+  require('../../assets/images/landing-4.svg'),
+];
 
 const Landing: React.FC = () => (
   <div id="page-landing">
     <div className="container" id="page-landing-content">
       <div className="logo-container">
-        <img width="240" height="144" src={logoImg} alt="logo" />
-        <h2>Se divirta aprendendo!</h2>
+        <img src={logoImg} alt="logo" />
+        <h2>Divirta-se aprendendo!</h2>
       </div>
 
-      <img src={landingImg} alt="Arquimat" className="game-image" />
+      <img
+        src={landingImgs[randInt(0, landingImgs.length)]}
+        alt="Arquimat"
+        className="game-image"
+      />
 
       <div className="buttons-container">
-        <Link to="/search-party" className="search-party">
-          Iniciar Partida
+        <Link to="/start-party" className="start-party">
+          Jogar
         </Link>
         <Link to="/player-status" className="player-status">
-          Ver Estatísticas
+          Estatísticas
         </Link>
       </div>
 
       <span className="total-wins">
         {`Total de ${0} partidas ganhas.`}
-        <img width="16" src={trophyImg} alt="Troféu" />
+        <img src={trophyImg} alt="Troféu" />
       </span>
     </div>
   </div>
