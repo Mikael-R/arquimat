@@ -1,18 +1,23 @@
-/* eslint-disable global-require */
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import trophyImg from '../../assets/images/icons/trophy.svg';
-import Logo from '../../compoenents/Logo';
+import trophyImg from '../../assets/icons/trophy.svg';
+import landing1Img from '../../assets/landing-1.svg';
+import landing2Img from '../../assets/landing-2.svg';
+import landing3Img from '../../assets/landing-3.svg';
+import landing4Img from '../../assets/landing-4.svg';
+import landing5Img from '../../assets/landing-5.svg';
+import Logo from '../../components/Logo';
 import randInt from '../../tools/randInt';
 
 import './styles.css';
 
 const landingImgs: string[] = [
-  require('../../assets/images/landing-1.svg'),
-  require('../../assets/images/landing-2.svg'),
-  require('../../assets/images/landing-3.svg'),
-  require('../../assets/images/landing-4.svg'),
+  landing1Img,
+  landing2Img,
+  landing3Img,
+  landing4Img,
+  landing5Img,
 ];
 
 const Landing: React.FC = () => (
@@ -24,6 +29,8 @@ const Landing: React.FC = () => (
       </div>
 
       <img
+        width="360"
+        height="260"
         src={landingImgs[randInt(0, landingImgs.length)]}
         alt="Arquimat"
         className="game-image"
@@ -39,7 +46,9 @@ const Landing: React.FC = () => (
       </div>
 
       <span className="total-wins">
-        {`Total de ${0} partidas ganhas.`}
+        Total de
+        {` ${0} `}
+        partidas ganhas.
         <img src={trophyImg} alt="Troféu" />
       </span>
     </div>
