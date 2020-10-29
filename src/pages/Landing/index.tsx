@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import trophyImg from '../../assets/images/icons/trophy.svg';
-import logoImg from '../../assets/images/logo.png';
+import Logo from '../../compoenents/Logo';
 import randInt from '../../tools/randInt';
 
 import './styles.css';
@@ -19,7 +19,7 @@ const Landing: React.FC = () => (
   <div id="page-landing">
     <div className="container" id="page-landing-content">
       <div className="logo-container">
-        <img src={logoImg} alt="logo" />
+        <Logo />
         <h2>Divirta-se aprendendo!</h2>
       </div>
 
