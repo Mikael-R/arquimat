@@ -7,7 +7,6 @@ import landing2Img from '../../assets/landing-2.svg';
 import landing3Img from '../../assets/landing-3.svg';
 import landing4Img from '../../assets/landing-4.svg';
 import landing5Img from '../../assets/landing-5.svg';
-import Logo from '../../components/Logo';
 import randInt from '../../tools/randInt';
 
 import './styles.css';
@@ -25,7 +24,7 @@ function Landing(): ReactElement {
     <div id="page-landing">
       <div className="container" id="page-landing-content">
         <div className="logo-container">
-          <Logo />
+          <div id="logo">Arquimat</div>
           <h2>Divirta-se aprendendo!</h2>
         </div>
 

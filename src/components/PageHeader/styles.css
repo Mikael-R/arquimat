@@ -19,8 +19,9 @@
 .page-header .top-bar-container a:hover {
   opacity: 0.6;
 }
-.page-header .top-bar-container > img {
-  height: 1.6rem;
+.page-header .top-bar-container #logo {
+  font: 700 2.0rem Poppins;
+  color: var(--color-title-in-primary);
 }
 .page-header .header-content {
   width: 90%;

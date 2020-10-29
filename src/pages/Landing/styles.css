@@ -10,9 +10,9 @@
   background: var(--color-primary);
 }
 
-.logo-container img {
-  height: 10rem;
-  width: 35rem;
+.logo-container #logo {
+  font: 700 5.8rem Poppins;
+  color: var(--color-title-in-primary);
 }
 
 .game-image {

@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import backIcon from '../../assets/icons/back.svg';
-import Logo from '../Logo';
 
 import './styles.css';
 
@@ -21,7 +20,7 @@ const PageHeader: React.FC<IPageHeaderProps> = ({
       <Link to="/">
         <img src={backIcon} alt="Voltar" />
       </Link>
-      <Logo />
+      <div id="logo">Arquimat</div>
     </div>
 
     <div className="header-content">
