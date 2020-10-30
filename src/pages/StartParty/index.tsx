@@ -10,10 +10,13 @@ import './styles.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 function StartParty(): ReactElement {
+  type TDificulty = 'easy' | 'medium' | 'hard' | 'impossible';
+
   const [preferences, setPreferences] = useState({
     totalPairs: '',
     flipTime: '',
     maxResult: '',
+    dificulty: '' as TDificulty,
     customExpressions: [] as string[],
   });
 
@@ -113,6 +116,23 @@ function StartParty(): ReactElement {
               value={preferences.flipTime}
               onChange={({ target }) => {
                 setPreferences({ ...preferences, flipTime: target.value });
+              }}
+            />
+            <Select
+              name="dificulty"
+              label="Dificuldade"
+              options={[
+                { value: 'easy', label: 'Burro' },
+                { value: 'medium', label: 'Estudante' },
+                { value: 'hard', label: 'Inteligente' },
+                { value: 'impossible', label: 'Super Dotado' },
+              ]}
+              value={preferences.dificulty}
+              onChange={({ target }) => {
+                setPreferences({
+                  ...preferences,
+                  dificulty: target.value as TDificulty,
+                });
               }}
             />
             <Input
