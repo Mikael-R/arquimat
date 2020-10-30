@@ -5,10 +5,10 @@ import './styles.css';
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
   name: string;
-  options: Array<{
+  options: {
     value: string;
     label: string;
-  }>;
+  }[];
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -23,8 +23,8 @@ const Select: React.FC<SelectProps> = ({
       <option value="" onChange={() => null} disabled hidden>
         Selecione uma opção
       </option>
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
+      {options.map((option, index) => (
+        <option key={index as number} value={option.value}>
           {option.label}
         </option>
       ))}

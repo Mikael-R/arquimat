@@ -9,13 +9,14 @@ import Select from '../../components/Select';
 import './styles.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-function StartParty(): ReactElement {
-  type TDificulty = 'easy' | 'medium' | 'hard' | 'impossible';
+type TDificulty = 'easy' | 'medium' | 'hard' | 'impossible';
 
+function StartParty(): ReactElement {
   const [preferences, setPreferences] = useState({
     totalPairs: '',
     flipTime: '',
     maxResult: '',
+    highlightRevealedCards: false,
     dificulty: '' as TDificulty,
     customExpressions: [] as string[],
   });
@@ -112,6 +113,9 @@ function StartParty(): ReactElement {
                 { value: '5', label: '5 segundos' },
                 { value: '6', label: '6 segundos' },
                 { value: '7', label: '7 segundos' },
+                { value: '7', label: '7 segundos' },
+                { value: '8', label: '8 segundos' },
+                { value: '9', label: '9 segundos' },
               ]}
               value={preferences.flipTime}
               onChange={({ target }) => {
@@ -136,6 +140,7 @@ function StartParty(): ReactElement {
               }}
             />
             <Input
+              shouldBreakLineBetweenLabelAndInput
               name="max-result"
               type="number"
               label="Valor máximo de resultado"
@@ -147,6 +152,18 @@ function StartParty(): ReactElement {
                   );
                 }
                 setPreferences({ ...preferences, maxResult: target.value });
+              }}
+            />
+            <Input
+              name="highlight-revealed-cards"
+              type="checkbox"
+              label="Destacar cards revelados"
+              value={preferences.highlightRevealedCards === true ? 1 : 0}
+              onChange={() => {
+                setPreferences({
+                  ...preferences,
+                  highlightRevealedCards: !preferences.highlightRevealedCards,
+                });
               }}
             />
           </fieldset>
@@ -161,6 +178,7 @@ function StartParty(): ReactElement {
             {preferences.customExpressions.map((expression, index) => (
               <div key={Number(index)} className="expression-item">
                 <Input
+                  shouldBreakLineBetweenLabelAndInput
                   name="custom-expression"
                   label={`Expressão ${Number(index) + 1}`}
                   value={expression}

@@ -5,10 +5,24 @@ import './styles.css';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   name: string;
+  // eslint-disable-next-line react/require-default-props
+  shouldBreakLineBetweenLabelAndInput?: boolean;
 }
 
-const Input: React.FC<InputProps> = ({ label, name, ...rest }: InputProps) => (
-  <div className="input-block">
+const Input: React.FC<InputProps> = ({
+  label,
+  name,
+  shouldBreakLineBetweenLabelAndInput,
+  ...rest
+}: InputProps) => (
+  <div
+    className="input-block"
+    style={
+      shouldBreakLineBetweenLabelAndInput
+        ? { flexDirection: 'column', alignItems: 'flex-start' }
+        : undefined
+    }
+  >
     <label htmlFor={name}>{label}</label>
     <input type="text" id={name} {...rest} />
   </div>
