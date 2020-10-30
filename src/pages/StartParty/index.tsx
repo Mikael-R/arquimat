@@ -1,4 +1,5 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, FormEvent } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 import warningIcon from '../../assets/icons/warning.svg';
 import Input from '../../components/Input';
@@ -6,99 +7,144 @@ import PageHeader from '../../components/PageHeader';
 import Select from '../../components/Select';
 
 import './styles.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 function StartParty(): ReactElement {
-  const [scheduleItems, setScheduleItems] = useState([
-    { week_day: 0, from: '', to: '' },
-  ]);
+  const [preferences, setPreferences] = useState({
+    totalPairs: '',
+    flipTime: '',
+    maxResult: '',
+    customExpressions: [] as string[],
+  });
 
-  function addNewScheduleItem() {
-    setScheduleItems([...scheduleItems, { week_day: 0, from: '', to: '' }]);
+  function addNewCustomExpression() {
+    if (preferences.totalPairs === '') {
+      toast.error('Selecione o número de pares!');
+    } else if (
+      preferences.customExpressions.length >= Number(preferences.totalPairs)
+    ) {
+      toast.error('O número de pares foi atingido!');
+    } else if (
+      preferences.customExpressions[
+        preferences.customExpressions.length - 1
+      ] === '0'
+    ) {
+      toast.error('Preencha o campo anterior!');
+    } else {
+      setPreferences({
+        ...preferences,
+        customExpressions: [...preferences.customExpressions, '0'],
+      });
+    }
   }
 
-  function setScheduleItemValue(
-    position: number,
-    field: string,
-    value: string,
-  ) {
-    const updateScheduleItems = scheduleItems.map((scheduleItem, index) => {
-      if (index === position) {
-        return { ...scheduleItem, [field]: value };
-      }
+  function addNewCustomExpressionValue(position: number, value: string) {
+    const customExpressionItems = preferences.customExpressions.map(
+      (expression, index) => {
+        const returnValue = index === position ? value : expression;
+        return returnValue === '' ? '0' : returnValue;
+      },
+    );
 
-      return scheduleItem;
+    setPreferences({
+      ...preferences,
+      customExpressions: customExpressionItems,
     });
+  }
 
-    setScheduleItems(updateScheduleItems);
+  function customExpressionsByTotalPairs(totalPairs: number) {
+    const customExpressionItems = preferences.customExpressions.filter(
+      (_, index) => index < totalPairs,
+    );
+
+    return customExpressionItems;
+  }
+
+  function handleSubmit(event: FormEvent) {
+    console.log(preferences);
+    event.preventDefault();
+    toast.info('Infelismente este recurso ainda não foi concluído.');
+    toast.info('Mas estou trabalhando intensamente, volte em breve ;)');
   }
 
   return (
-    <div className="container" id="page-teacher-form">
+    <div className="container" id="start-party-form">
       <PageHeader
         title="Que bom que você quer jogar."
         description="Primeiramente, preencha este formulário com as suas preferências e divirta-se no seu estilo."
       />
 
       <main>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={handleSubmit}>
           <fieldset>
-            <legend>1</legend>
-            <Input name="name" label="Nome Completo" />
-          </fieldset>
-
-          <fieldset>
-            <legend>2</legend>
+            <legend>Regras de jogo</legend>
             <Select
-              name="test-select"
-              label="Apenas um teste"
-              options={[{ value: 'Teste', label: 'Teste' }]}
+              name="total-pairs"
+              label="Número de pares"
+              options={[
+                { value: '3', label: '3 pares' },
+                { value: '4', label: '4 pares' },
+                { value: '5', label: '5 pares' },
+                { value: '6', label: '6 pares' },
+                { value: '7', label: '7 pares' },
+                { value: '8', label: '8 pares' },
+              ]}
+              value={preferences.totalPairs}
+              onChange={({ target }) => {
+                setPreferences({
+                  ...preferences,
+                  totalPairs: target.value,
+                  customExpressions: customExpressionsByTotalPairs(
+                    Number(target.value),
+                  ),
+                });
+              }}
+            />
+            <Select
+              name="flip-time"
+              label="Tempo de visualização"
+              options={[
+                { value: '4', label: '4 segundos' },
+                { value: '5', label: '5 segundos' },
+                { value: '6', label: '6 segundos' },
+                { value: '7', label: '7 segundos' },
+              ]}
+              value={preferences.flipTime}
+              onChange={({ target }) => {
+                setPreferences({ ...preferences, flipTime: target.value });
+              }}
+            />
+            <Input
+              name="max-result"
+              type="number"
+              label="Valor máximo de resultado"
+              value={preferences.maxResult}
+              onChange={({ target }) => {
+                if (preferences.maxResult === '') {
+                  toast.info(
+                    'O resultado das expressões customizadas não são afetadas por este resultado!',
+                  );
+                }
+                setPreferences({ ...preferences, maxResult: target.value });
+              }}
             />
           </fieldset>
 
           <fieldset>
             <legend>
-              3
-              <button onClick={addNewScheduleItem} type="button">
-                + Novo Horário
+              Expressões predefinidas
+              <button onClick={addNewCustomExpression} type="button">
+                + Expressão
               </button>
             </legend>
-            {scheduleItems.map((scheduleItem, index) => (
+            {preferences.customExpressions.map((expression, index) => (
               <div key={Number(index)} className="schedule-item">
-                <Select
-                  name="week_day"
-                  label="Dia da Semana"
-                  value={scheduleItem.week_day}
-                  onChange={(e) => {
-                    setScheduleItemValue(index, 'week_day', e.target.value);
-                  }}
-                  options={[
-                    { value: '0', label: 'Domingo' },
-                    { value: '1', label: 'Segunda-feira' },
-                    { value: '2', label: 'Terça-feira' },
-                    { value: '3', label: 'Quarta-feira' },
-                    { value: '4', label: 'Quinta-feira' },
-                    { value: '5', label: 'Sexta-feira' },
-                    { value: '6', label: 'Sábado' },
-                  ]}
-                />
-
                 <Input
-                  name="from"
-                  label="Das"
-                  type="time"
-                  value={scheduleItem.from}
-                  onChange={(e) => {
-                    setScheduleItemValue(index, 'from', e.target.value);
-                  }}
-                />
-
-                <Input
-                  name="to"
-                  label="Até"
-                  type="time"
-                  value={scheduleItem.to}
-                  onChange={(e) => {
-                    setScheduleItemValue(index, 'to', e.target.value);
+                  name="custom-expression"
+                  label={`Expressão ${Number(index) + 1}`}
+                  value={expression}
+                  onChange={({ target }) => {
+                    addNewCustomExpressionValue(index, target.value);
                   }}
                 />
               </div>
@@ -114,6 +160,7 @@ function StartParty(): ReactElement {
             </p>
             <button type="submit">Iniciar Partida</button>
           </footer>
+          <ToastContainer />
         </form>
       </main>
     </div>
