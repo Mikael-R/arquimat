@@ -1,6 +1,8 @@
+/* eslint-disable react/require-default-props */
 import React, { SelectHTMLAttributes } from 'react';
 
 import './styles.css';
+import { SelectBlock } from './styles';
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
@@ -9,15 +11,17 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
     value: string;
     label: string;
   }[];
+  focusLineColor?: string | number;
 }
 
 const Select: React.FC<SelectProps> = ({
   label,
   name,
   options,
+  focusLineColor = 'var(--color-primary-light)',
   ...rest
 }: SelectProps) => (
-  <div className="select-block">
+  <SelectBlock theme={{ focusLineColor }} className="select-block">
     <label htmlFor={name}>{label}</label>
     <select value="" onChange={() => null} id={name} {...rest}>
       <option value="" onChange={() => null} disabled hidden>
@@ -29,7 +33,7 @@ const Select: React.FC<SelectProps> = ({
         </option>
       ))}
     </select>
-  </div>
+  </SelectBlock>
 );
 
 export default Select;

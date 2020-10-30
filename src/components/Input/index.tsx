@@ -1,22 +1,26 @@
+/* eslint-disable react/require-default-props */
 import React, { InputHTMLAttributes } from 'react';
 
 import './styles.css';
+import { InputBlock } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   name: string;
-  // eslint-disable-next-line react/require-default-props
   shouldBreakLineBetweenLabelAndInput?: boolean;
+  focusLineColor?: string | number;
 }
 
 const Input: React.FC<InputProps> = ({
   label,
   name,
   shouldBreakLineBetweenLabelAndInput,
+  focusLineColor = 'var(--color-primary-light)',
   ...rest
 }: InputProps) => (
-  <div
+  <InputBlock
     className="input-block"
+    theme={{ focusLineColor }}
     style={
       shouldBreakLineBetweenLabelAndInput
         ? { flexDirection: 'column', alignItems: 'flex-start' }
@@ -25,7 +29,7 @@ const Input: React.FC<InputProps> = ({
   >
     <label htmlFor={name}>{label}</label>
     <input type="text" id={name} {...rest} />
-  </div>
+  </InputBlock>
 );
 
 export default Input;

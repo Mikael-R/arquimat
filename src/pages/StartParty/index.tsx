@@ -145,12 +145,14 @@ function StartParty(): ReactElement {
               type="number"
               label="Valor máximo de resultado"
               value={preferences.maxResult}
-              onChange={({ target }) => {
+              onFocus={() => {
                 if (preferences.maxResult === '') {
                   toast.info(
                     'O resultado das expressões customizadas não são afetadas por este resultado!',
                   );
                 }
+              }}
+              onChange={({ target }) => {
                 setPreferences({ ...preferences, maxResult: target.value });
               }}
             />
