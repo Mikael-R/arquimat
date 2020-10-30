@@ -61,6 +61,7 @@ function StartParty(): ReactElement {
   }
 
   function handleSubmit(event: FormEvent) {
+    // eslint-disable-next-line no-console
     console.log(preferences);
     event.preventDefault();
     toast.info('Infelismente este recurso ainda não foi concluído.');
@@ -132,13 +133,13 @@ function StartParty(): ReactElement {
 
           <fieldset>
             <legend>
-              Expressões predefinidas
+              Expressões customizadas
               <button onClick={addNewCustomExpression} type="button">
                 + Expressão
               </button>
             </legend>
             {preferences.customExpressions.map((expression, index) => (
-              <div key={Number(index)} className="schedule-item">
+              <div key={Number(index)} className="expression-item">
                 <Input
                   name="custom-expression"
                   label={`Expressão ${Number(index) + 1}`}
