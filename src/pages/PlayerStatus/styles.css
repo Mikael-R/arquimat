@@ -1,0 +1,27 @@
+#page-player-status {
+  width: 100vw;
+  height: 100vh;
+}
+
+#page-player-status main {
+  margin: 3.2rem auto;
+  width: 90%;
+}
+
+#page-player-status main p {
+  margin: 1.4rem auto;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+@media (min-width: 700px) {
+  #page-player-status {
+    max-width: 100%;
+  }
+
+  #page-player-status main {
+    padding: 3.2rem 0;
+    max-width: 740px;
+    margin: 0 auto;
+  }
+}
