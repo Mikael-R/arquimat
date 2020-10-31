@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, FormEvent } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
 import warningIcon from '../../assets/icons/warning.svg';
@@ -9,9 +10,11 @@ import Select from '../../components/Select';
 import './styles.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-type TDificulty = 'easy' | 'medium' | 'hard' | 'impossible';
+type TDificulty = 'easy' | 'medium' | 'hard' | 'impossible' | '';
 
 function StartParty(): ReactElement {
+  const history = useHistory();
+
   const [preferences, setPreferences] = useState({
     totalPairs: '',
     flipTime: '',
@@ -64,12 +67,40 @@ function StartParty(): ReactElement {
     return customExpressionItems;
   }
 
+  function verifyPreferences() {
+    switch (true) {
+      case preferences.totalPairs === '':
+        document.getElementById('total-pairs')?.scrollIntoView();
+        document.getElementById('total-pairs')?.focus();
+        break;
+
+      case preferences.flipTime === '':
+        document.getElementById('flip-time')?.scrollIntoView();
+        document.getElementById('flip-time')?.focus();
+        break;
+
+      case preferences.dificulty === '':
+        document.getElementById('dificulty')?.scrollIntoView();
+        document.getElementById('dificulty')?.focus();
+        break;
+
+      case preferences.maxResult === '':
+        document.getElementById('max-result')?.scrollIntoView();
+        document.getElementById('max-result')?.focus();
+        break;
+
+      default:
+        return true;
+    }
+    toast.error('Preencha todos os campos');
+    return false;
+  }
+
   function handleSubmit(event: FormEvent) {
-    // eslint-disable-next-line no-console
-    console.log(preferences);
-    event.preventDefault();
-    toast.info('Infelismente este recurso ainda não foi concluído.');
-    toast.info('Mas estou trabalhando intensamente, volte em breve ;)');
+    const passed = verifyPreferences();
+
+    if (passed) history.push('/');
+    else event.preventDefault();
   }
 
   return (
