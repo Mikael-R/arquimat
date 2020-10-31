@@ -18,7 +18,7 @@ function StartParty(): ReactElement {
   const [preferences, setPreferences] = useState({
     totalPairs: '',
     flipTime: '',
-    maxResult: '',
+    maxResult: '50',
     highlightRevealedCards: false,
     dificulty: '' as TDificulty,
     customExpressions: [] as string[],
@@ -144,9 +144,9 @@ function StartParty(): ReactElement {
                 { value: '5', label: '5 segundos' },
                 { value: '6', label: '6 segundos' },
                 { value: '7', label: '7 segundos' },
-                { value: '7', label: '7 segundos' },
                 { value: '8', label: '8 segundos' },
                 { value: '9', label: '9 segundos' },
+                { value: '10', label: '10 segundos' },
               ]}
               value={preferences.flipTime}
               onChange={({ target }) => {
@@ -174,6 +174,8 @@ function StartParty(): ReactElement {
               shouldBreakLineBetweenLabelAndInput
               name="max-result"
               type="number"
+              min="1"
+              max="99"
               label="Valor máximo de resultado"
               value={preferences.maxResult}
               onFocus={() => {
@@ -184,7 +186,11 @@ function StartParty(): ReactElement {
                 }
               }}
               onChange={({ target }) => {
-                setPreferences({ ...preferences, maxResult: target.value });
+                if (Number(target.value) > 99 || Number(target.value) < 1) {
+                  toast.warn('Use números maiores que 0 e menores que 100!');
+                } else {
+                  setPreferences({ ...preferences, maxResult: target.value });
+                }
               }}
             />
             <Input
