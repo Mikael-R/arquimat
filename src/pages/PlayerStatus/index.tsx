@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 
 import purpleHeartIcon from '../../assets/icons/purple-heart.svg';
+import LabelKeyValue from '../../components/LabelKeyValue';
 import PageHeader from '../../components/PageHeader';
 
 import './styles.css';
@@ -8,28 +9,25 @@ import './styles.css';
 function PlayerStatus(): ReactElement {
   return (
     <div className="container" id="page-player-status">
-      <PageHeader title="Estas são as suas estatísticas." />
+      <PageHeader
+        title="Estas são as suas estatísticas."
+        description="Jogue mais partidas para conseguir o máximo de informações possíveis."
+      />
 
       <main>
-        <p>Vitórias</p>
-        <hr />
-        <p>Partidas jogadas</p>
-        <hr />
-        <p>Índice de vitórias (vitórias/partidas)</p>
-        <hr />
-        <p>Dificuldade mais jogada</p>
-        <hr />
-        <p>Últimas 4 contas customizadas</p>
-        <hr />
-        <p>Entrou por último</p>
-        <hr />
-        <p>Média de duração de uma partida</p>
-        <hr />
-        <p>Acertos seguidos</p>
-        <hr />
-        <p>Cards revelados</p>
-        <hr />
-        <p>Pares formados</p>
+        <fieldset>
+          <legend>Estatísticas</legend>
+          <LabelKeyValue title="Vitórias" content="2" />
+          <LabelKeyValue title="Partidas jogadas" content="2" />
+          <LabelKeyValue title="Probabilidade de vitória" content="2%" />
+          <LabelKeyValue title="Dificuldade mais jogada" content="fácil" />
+          <LabelKeyValue title="Última conta customizada" content="2" />
+          <LabelKeyValue title="Entrou por último" content="hoje" />
+          <LabelKeyValue title="Duração média de partida" content="1 minuto" />
+          <LabelKeyValue title="Acertos seguidos" content="3" />
+          <LabelKeyValue title="Cards revelados" content="3" />
+          <LabelKeyValue title="Pares formados" content="3" />
+        </fieldset>
 
         <footer>
           <p>
