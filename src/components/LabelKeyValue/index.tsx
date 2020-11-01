@@ -4,18 +4,18 @@ import './styles.css';
 
 interface LabelKeyValueProps extends HTMLAttributes<HTMLSpanElement> {
   title: string;
-  content: string;
+  value: string;
 }
 
 const LabelKeyValue: React.FC<LabelKeyValueProps> = ({
   title,
-  content,
+  value,
   ...rest
 }: LabelKeyValueProps) => (
   <div className="label-key-value-block">
     <label>{title}</label>
     <span style={{ width: title.length * 10 }} {...rest}>
-      {content}
+      {value}
     </span>
   </div>
 );

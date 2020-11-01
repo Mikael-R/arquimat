@@ -17,16 +17,16 @@ function PlayerStatus(): ReactElement {
       <main>
         <fieldset>
           <legend>Estatísticas</legend>
-          <LabelKeyValue title="Vitórias" content="2" />
-          <LabelKeyValue title="Partidas jogadas" content="2" />
-          <LabelKeyValue title="Probabilidade de vitória" content="2%" />
-          <LabelKeyValue title="Dificuldade mais jogada" content="fácil" />
-          <LabelKeyValue title="Última conta customizada" content="2" />
-          <LabelKeyValue title="Entrou por último" content="hoje" />
-          <LabelKeyValue title="Duração média de partida" content="1 minuto" />
-          <LabelKeyValue title="Acertos seguidos" content="3" />
-          <LabelKeyValue title="Cards revelados" content="3" />
-          <LabelKeyValue title="Pares formados" content="3" />
+          <LabelKeyValue title="Vitórias" value="2" />
+          <LabelKeyValue title="Partidas jogadas" value="2" />
+          <LabelKeyValue title="Probabilidade de vitória" value="2%" />
+          <LabelKeyValue title="Dificuldade mais jogada" value="fácil" />
+          <LabelKeyValue title="Última conta customizada" value="2" />
+          <LabelKeyValue title="Entrou por último" value="hoje" />
+          <LabelKeyValue title="Duração média de partida" value="1 minuto" />
+          <LabelKeyValue title="Acertos seguidos" value="3" />
+          <LabelKeyValue title="Cards revelados" value="3" />
+          <LabelKeyValue title="Pares formados" value="3" />
         </fieldset>
 
         <footer>
