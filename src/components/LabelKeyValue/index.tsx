@@ -14,7 +14,12 @@ const LabelKeyValue: React.FC<LabelKeyValueProps> = ({
 }: LabelKeyValueProps) => (
   <div className="label-key-value-block">
     <label>{title}</label>
-    <span {...rest}>{content}</span>
+    <input
+      readOnly
+      style={{ width: title.length * 10 }}
+      {...rest}
+      value={content}
+    />
   </div>
 );
 

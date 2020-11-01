@@ -14,10 +14,8 @@
   font-weight: 600;
 }
 
-.label-key-value-block span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.label-key-value-block input {
+  text-align: center;
   width: 30%;
   height: 3.8rem;
   border-radius: 0.8rem;
