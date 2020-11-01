@@ -1,8 +1,8 @@
-import React, { InputHTMLAttributes } from 'react';
+import React, { HTMLAttributes } from 'react';
 
 import './styles.css';
 
-interface LabelKeyValueProps extends InputHTMLAttributes<HTMLInputElement> {
+interface LabelKeyValueProps extends HTMLAttributes<HTMLSpanElement> {
   title: string;
   content: string;
 }
@@ -14,12 +14,9 @@ const LabelKeyValue: React.FC<LabelKeyValueProps> = ({
 }: LabelKeyValueProps) => (
   <div className="label-key-value-block">
     <label>{title}</label>
-    <input
-      readOnly
-      style={{ width: title.length * 10 }}
-      {...rest}
-      value={content}
-    />
+    <span style={{ width: title.length * 10 }} {...rest}>
+      {content}
+    </span>
   </div>
 );
 
