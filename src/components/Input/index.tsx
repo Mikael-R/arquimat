@@ -24,7 +24,7 @@ const Input: React.FC<InputProps> = ({
     }
   >
     <label htmlFor={name}>{label}</label>
-    <input type="text" id={name} {...rest} />
+    <input type="text" name={name} id={name} {...rest} />
   </div>
 );
 
