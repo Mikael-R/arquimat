@@ -121,3 +121,9 @@
     justify-self: flex-end;
   }
 }
+
+@media (max-height: 361px) {
+  .game-image {
+    display: none;
+  }
+}

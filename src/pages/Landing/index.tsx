@@ -5,23 +5,15 @@ import trophyImg from '../../assets/icons/trophy.svg';
 import landing1Img from '../../assets/landing-1.svg';
 import landing2Img from '../../assets/landing-2.svg';
 import landing3Img from '../../assets/landing-3.svg';
-import landing4Img from '../../assets/landing-4.svg';
-import landing5Img from '../../assets/landing-5.svg';
 import randInt from '../../tools/randInt';
 
 import './styles.css';
 
-const landingImgs: string[] = [
-  landing1Img,
-  landing2Img,
-  landing3Img,
-  landing4Img,
-  landing5Img,
-];
+const landingImages: string[] = [landing1Img, landing2Img, landing3Img];
 
 sessionStorage.setItem(
   'landingImgURL',
-  landingImgs[randInt(0, landingImgs.length)],
+  landingImages[randInt(0, landingImages.length)],
 );
 
 function Landing(): ReactElement {
@@ -34,8 +26,6 @@ function Landing(): ReactElement {
         </div>
 
         <img
-          width="360"
-          height="260"
           src={sessionStorage.getItem('landingImgURL') as string}
           alt="Arquimat"
           className="game-image"
