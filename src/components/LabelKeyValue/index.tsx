@@ -4,7 +4,7 @@ import './styles.css';
 
 interface LabelKeyValueProps extends HTMLAttributes<HTMLSpanElement> {
   title: string;
-  value: string;
+  value: string | number;
 }
 
 const LabelKeyValue: React.FC<LabelKeyValueProps> = ({

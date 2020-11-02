@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import React, { ReactElement } from 'react';
 
 import purpleHeartIcon from '../../assets/icons/purple-heart.svg';
@@ -7,6 +8,17 @@ import PageHeader from '../../components/PageHeader';
 import './styles.css';
 
 function PlayerStatus(): ReactElement {
+  const playerAnalytics = {
+    wins: 2,
+    totalParties: 2,
+    dificultyMostUsed: 'fácil',
+    lastCustomAccount: '2x2',
+    cameInLast: 'hoje',
+    timeSpentOnAllPartiesInSeconds: 60,
+    straightHits: '2',
+    cardsRevealed: '20',
+  };
+
   return (
     <div className="container" id="page-player-status">
       <PageHeader
@@ -17,16 +29,47 @@ function PlayerStatus(): ReactElement {
       <main>
         <fieldset>
           <legend>Estatísticas</legend>
-          <LabelKeyValue title="Vitórias" value="2" />
-          <LabelKeyValue title="Partidas jogadas" value="2" />
-          <LabelKeyValue title="Probabilidade de vitória" value="2%" />
-          <LabelKeyValue title="Dificuldade mais jogada" value="fácil" />
-          <LabelKeyValue title="Última conta customizada" value="2" />
-          <LabelKeyValue title="Entrou por último" value="hoje" />
-          <LabelKeyValue title="Duração média de partida" value="1 minuto" />
-          <LabelKeyValue title="Acertos seguidos" value="3" />
-          <LabelKeyValue title="Cards revelados" value="3" />
-          <LabelKeyValue title="Pares formados" value="3" />
+          <LabelKeyValue title="Vitórias" value={playerAnalytics.wins} />
+          <LabelKeyValue
+            title="Partidas jogadas"
+            value={playerAnalytics.totalParties}
+          />
+          <LabelKeyValue
+            title="Cards revelados"
+            value={playerAnalytics.cardsRevealed}
+          />
+          <LabelKeyValue
+            title="Acertos seguidos"
+            value={playerAnalytics.straightHits}
+          />
+          <LabelKeyValue
+            title="Probabilidade de vitória"
+            value={`${(
+              (playerAnalytics.wins / playerAnalytics.totalParties) *
+              100
+            ).toFixed(0)}%`}
+          />
+          <LabelKeyValue
+            title="Dificuldade mais jogada"
+            value={playerAnalytics.dificultyMostUsed}
+          />
+
+          <LabelKeyValue
+            title="Duração média de partida"
+            value={`${(
+              playerAnalytics.timeSpentOnAllPartiesInSeconds /
+              playerAnalytics.totalParties
+            ).toFixed(0)} segundos`}
+          />
+
+          <LabelKeyValue
+            title="Última conta customizada"
+            value={playerAnalytics.lastCustomAccount}
+          />
+          <LabelKeyValue
+            title="Entrou por último"
+            value={playerAnalytics.cameInLast}
+          />
         </fieldset>
 
         <footer>
