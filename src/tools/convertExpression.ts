@@ -1,6 +1,7 @@
 /* eslint-disable arrow-body-style */
 export const convertToMathExpression = (expression: string) => {
   return expression
+    .toLowerCase()
     .split('**')
     .join('^')
     .split('*')
@@ -11,6 +12,7 @@ export const convertToMathExpression = (expression: string) => {
 
 export const convertToJsExpression = (expression: string) => {
   return expression
+    .toLowerCase()
     .split('^')
     .join('**')
     .split('x')
