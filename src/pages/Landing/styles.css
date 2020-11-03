@@ -2,6 +2,9 @@
   width: 100vw;
   height: 100vh;
 
+  min-width: 300px;
+  min-height: 300px;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -122,7 +125,19 @@
   }
 }
 
-@media (max-height: 361px) {
+@media (max-height: 720px) {
+  .game-image {
+    width: 70%;
+    margin-left: 15%;
+  }
+
+  .buttons-container a {
+    height: 8rem;
+  }
+}
+
+
+@media (max-height: 560px) {
   .game-image {
     display: none;
   }
