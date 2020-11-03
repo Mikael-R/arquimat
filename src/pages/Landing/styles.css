@@ -65,13 +65,13 @@
   background: var(--color-primary-lighter);
 }
 .buttons-container a.player-status {
-  background: var(--color-secundary);
+  background: var(--color-secondary);
 }
 .buttons-container a.start-party:hover {
   background: var(--color-primary-light);
 }
 .buttons-container a.player-status:hover {
-  background: var(--color-secundary-dark);
+  background: var(--color-secondary-dark);
 }
 
 .total-wins {
