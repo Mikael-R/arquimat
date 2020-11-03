@@ -3,21 +3,21 @@ const timeSince = (date: Date) => {
   let interval = 0;
 
   interval = Math.floor(seconds / 31536000);
-  if (interval > 1) return `Há ${interval} anos atrás`;
+  if (interval > 1) return `${interval} anos atrás`;
 
   interval = Math.floor(seconds / 2592000);
-  if (interval > 1) return `Há ${interval} mêses atrás`;
+  if (interval > 1) return `${interval} mêses atrás`;
 
   interval = Math.floor(seconds / 86400);
-  if (interval > 1) return `Há ${interval} dias atrás`;
+  if (interval > 1) return `${interval} dias atrás`;
 
   interval = Math.floor(seconds / 3600);
-  if (interval > 1) return `Há ${interval} horas atrás`;
+  if (interval > 1) return `${interval} horas atrás`;
 
   interval = Math.floor(seconds / 60);
-  if (interval > 1) return `Há ${interval} minutos atrás`;
+  if (interval > 1) return `${interval} minutos atrás`;
 
-  return `Há ${Math.floor(seconds)} segundos atrás`;
+  return `${Math.floor(seconds)} segundos atrás`;
 };
 
 export default timeSince;

@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 
 import LabelKeyValue from '../../components/LabelKeyValue';
 import PageHeader from '../../components/PageHeader';
+import timeRange from '../../tools/timeRange';
 import timeSince from '../../tools/timeSince';
 
 import './styles.css';
@@ -27,7 +28,7 @@ function PlayerStatus(): ReactElement {
     Number(localStorage.getItem('timeSpentOnAllMatchesInSeconds')) || 0;
 
   const averageMatchDurationInSeconds = timeSpentOnAllMatchesInSeconds
-    ? (totalMatches / timeSpentOnAllMatchesInSeconds).toFixed(0)
+    ? Number((totalMatches / timeSpentOnAllMatchesInSeconds).toFixed(0))
     : 0;
 
   const lastCustomExpression =
@@ -55,19 +56,26 @@ function PlayerStatus(): ReactElement {
             title="Probabilidade de vitória"
             value={`${probabilityOfVictory}%`}
           />
-          {/* timeSpentOnAllMatchesInSeconds */}
+          {timeSpentOnAllMatchesInSeconds && (
+            <LabelKeyValue
+              title="Tempo de jogo"
+              value={timeRange(timeSpentOnAllMatchesInSeconds)}
+            />
+          )}
           <LabelKeyValue
             title="Duração média das partidas"
-            value={`${averageMatchDurationInSeconds} segundos`}
+            value={timeRange(averageMatchDurationInSeconds)}
           />
           <LabelKeyValue
             title="Última conta customizada"
             value={lastCustomExpression}
           />
-          <LabelKeyValue
-            title="Última partida jogada"
-            value={cameInLastParty}
-          />
+          {cameInLastParty && (
+            <LabelKeyValue
+              title="Jogou por último há"
+              value={cameInLastParty}
+            />
+          )}
         </fieldset>
 
         <footer>
