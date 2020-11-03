@@ -19,7 +19,7 @@
 }
 
 .game-image {
-  width: 96%;
+  width: 90%;
 }
 
 .logo-container {
@@ -119,7 +119,7 @@
   }
 }
 
-@media (max-height: 560px) {
+@media (max-height: 551px) {
   .game-image {
     display: none;
   }
