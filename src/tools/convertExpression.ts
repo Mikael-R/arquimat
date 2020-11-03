@@ -18,21 +18,3 @@ export const convertToJsExpression = (expression: string) => {
     .split('÷')
     .join('/');
 };
-
-export const isValidMathExpression = (expression: string) => {
-  return (
-    expression
-      .split(/[0-9]/)
-      .join('')
-      .split('^')
-      .join('')
-      .split('x')
-      .join('')
-      .split('÷')
-      .join('')
-      .split(')')
-      .join('')
-      .split('(')
-      .join('').length === 0
-  );
-};
