@@ -39,7 +39,7 @@ function Landing(): ReactElement {
         />
 
         <div className="buttons-container">
-          <Link to="/start-party" className="start-party">
+          <Link to="/start-match" className="start-match">
             Jogar
           </Link>
           <Link to="/player-status" className="player-status">

@@ -16,7 +16,7 @@ const Calc = new Calculation();
 
 type TDifficulty = 'fácil' | 'médio' | 'difícil' | 'impossível' | '';
 
-function StartParty(): ReactElement {
+function StartMatch(): ReactElement {
   const history = useHistory();
 
   const [preferences, setPreferences] = useState({
@@ -128,9 +128,9 @@ function StartParty(): ReactElement {
     }
   }
 
-  function setCameInLastParty() {
+  function setCameInLastMatch() {
     localStorage.setItem(
-      'cameInLastPartyAsMilliseconds',
+      'cameInLastMatchAsMilliseconds',
       String(new Date().getTime()),
     );
   }
@@ -151,7 +151,7 @@ function StartParty(): ReactElement {
 
     if (errorMessage === null) {
       toast.info('Infelizmente este recurso ainda não foi concluído!');
-      setCameInLastParty();
+      setCameInLastMatch();
       setTotalMatches();
       setLastCustomExpression(
         preferences.customExpressions[preferences.customExpressions.length - 1],
@@ -164,7 +164,7 @@ function StartParty(): ReactElement {
   }
 
   return (
-    <div className="container" id="start-party-form">
+    <div className="container" id="start-match-form">
       <PageHeader
         title="Que bom que você quer jogar."
         description="Primeiramente, preencha este formulário com as suas preferências e divirta-se no seu estilo."
@@ -305,4 +305,4 @@ function StartParty(): ReactElement {
   );
 }
 
-export default StartParty;
+export default StartMatch;

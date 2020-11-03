@@ -9,8 +9,8 @@ import timeSince from '../../tools/timeSince';
 import './styles.css';
 
 function PlayerStatus(): ReactElement {
-  const cameInLastPartyAsMilliseconds = Number(
-    localStorage.getItem('cameInLastPartyAsMilliseconds'),
+  const cameInLastMatchAsMilliseconds = Number(
+    localStorage.getItem('cameInLastMatchAsMilliseconds'),
   );
 
   const wins = Number(localStorage.getItem('wins')) || 0;
@@ -34,8 +34,8 @@ function PlayerStatus(): ReactElement {
   const lastCustomExpression =
     localStorage.getItem('lastCustomExpression') || 'nenhuma';
 
-  const cameInLastParty = cameInLastPartyAsMilliseconds
-    ? timeSince(new Date(cameInLastPartyAsMilliseconds))
+  const cameInLastMatch = cameInLastMatchAsMilliseconds
+    ? timeSince(new Date(cameInLastMatchAsMilliseconds))
     : '';
 
   return (
@@ -70,10 +70,10 @@ function PlayerStatus(): ReactElement {
             title="Última conta customizada"
             value={lastCustomExpression}
           />
-          {cameInLastParty && (
+          {cameInLastMatch && (
             <LabelKeyValue
               title="Jogou por último há"
-              value={cameInLastParty}
+              value={cameInLastMatch}
             />
           )}
         </fieldset>

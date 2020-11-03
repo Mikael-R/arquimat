@@ -58,13 +58,13 @@
 .buttons-container a:first-child {
   margin-right: 1.6rem;
 }
-.buttons-container a.start-party {
+.buttons-container a.start-match {
   background: var(--color-primary-lighter);
 }
 .buttons-container a.player-status {
   background: var(--color-secondary);
 }
-.buttons-container a.start-party:hover {
+.buttons-container a.start-match:hover {
   background: var(--color-primary-light);
 }
 .buttons-container a.player-status:hover {
