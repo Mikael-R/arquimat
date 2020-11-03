@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
-import trophyImg from '../../assets/icons/trophy.svg';
 import landing1Img from '../../assets/landing-1.svg';
 import landing2Img from '../../assets/landing-2.svg';
 import landing3Img from '../../assets/landing-3.svg';
@@ -43,8 +42,7 @@ function Landing(): ReactElement {
         <span className="total-wins">
           Total de
           {` ${localStorage.getItem('wins') || 0} `}
-          partidas ganhas.
-          <img src={trophyImg} alt="Troféu" />
+          partidas ganhas. &#x1F3C6;
         </span>
       </div>
     </div>

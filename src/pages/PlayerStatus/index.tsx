@@ -1,7 +1,6 @@
 /* eslint-disable operator-linebreak */
 import React, { ReactElement } from 'react';
 
-import purpleHeartIcon from '../../assets/icons/purple-heart.svg';
 import LabelKeyValue from '../../components/LabelKeyValue';
 import PageHeader from '../../components/PageHeader';
 import timeSince from '../../tools/timeSince';
@@ -77,9 +76,7 @@ function PlayerStatus(): ReactElement {
 
         <footer>
           <p>
-            Feito com
-            <img src={purpleHeartIcon} alt="Coração roxo" />
-            por
+            Feito com &#x1F49C; por
             <a href="https://mikael-r.github.io/contact/">Mikael</a>
           </p>
         </footer>
