@@ -42,7 +42,7 @@ function Landing(): ReactElement {
 
         <span className="total-wins">
           Total de
-          {` ${0} `}
+          {` ${localStorage.getItem('wins') || 0} `}
           partidas ganhas.
           <img src={trophyImg} alt="Troféu" />
         </span>
