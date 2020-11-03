@@ -125,18 +125,6 @@
   }
 }
 
-@media (max-height: 720px) {
-  .game-image {
-    width: 70%;
-    margin-left: 15%;
-  }
-
-  .buttons-container a {
-    height: 8rem;
-  }
-}
-
-
 @media (max-height: 560px) {
   .game-image {
     display: none;
