@@ -9,7 +9,10 @@ import PageHeader from '../../components/PageHeader';
 import Select from '../../components/Select';
 import './styles.css';
 import Calculation from '../../tools/Calculation';
-import { convertToJsExpression } from '../../tools/convertExpression';
+import {
+  convertToJsExpression,
+  convertToMathExpression,
+} from '../../tools/convertExpression';
 import convertNodeListOfToArray from '../../tools/convertNodeListOfToArray';
 
 const Calc = new Calculation();
@@ -150,7 +153,9 @@ function StartMatch(): ReactElement {
     const errorMessage = verifyPreferences();
 
     if (errorMessage === null) {
-      toast.info('Infelizmente este recurso ainda não foi concluído!');
+      toast.info(
+        'Infelizmente os cards não estão prontos, por que não volta mais tarde?',
+      );
       setCameInLastMatch();
       setTotalMatches();
       setLastCustomExpression(
@@ -281,7 +286,10 @@ function StartMatch(): ReactElement {
                   label={`Expressão ${Number(index) + 1}`}
                   value={expression}
                   onChange={({ target }) => {
-                    addNewCustomExpressionValue(index, target.value);
+                    addNewCustomExpressionValue(
+                      index,
+                      convertToMathExpression(target.value),
+                    );
                   }}
                 />
               </div>
