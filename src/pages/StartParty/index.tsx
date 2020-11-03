@@ -128,11 +128,34 @@ function StartParty(): ReactElement {
     }
   }
 
+  function setCameInLastParty() {
+    localStorage.setItem(
+      'cameInLastPartyAsMilliseconds',
+      String(new Date().getTime()),
+    );
+  }
+
+  function setTotalMatches() {
+    localStorage.setItem(
+      'totalMatches',
+      String(Number(localStorage.getItem('totalMatches') || 0) + 1),
+    );
+  }
+
+  function setLastCustomExpression(expression: string) {
+    localStorage.setItem('totalMatches', expression);
+  }
+
   function handleSubmit(event: FormEvent) {
     const errorMessage = verifyPreferences();
 
     if (errorMessage === null) {
       toast.info('Infelizmente este recurso ainda não foi concluído!');
+      setCameInLastParty();
+      setTotalMatches();
+      setLastCustomExpression(
+        preferences.customExpressions[preferences.customExpressions.length - 1],
+      );
       history.push('/');
     } else {
       toast.error(errorMessage, { bodyStyle: { whiteSpace: 'pre-line' } });
