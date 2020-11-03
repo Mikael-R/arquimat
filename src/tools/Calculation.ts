@@ -1,7 +1,13 @@
 /* eslint-disable */
+interface IOperationBinary {
+  (a: number, b: number): number;
+}
+
 class Calculation {
+  private symbols: any;
+
   constructor() {
-    this._symbols = {};
+    this.symbols = {};
     this.defineOperator('!', this.factorial, 'postfix', 6);
     this.defineOperator('^', this.pow, 'infix', 5, true);
     this.defineOperator('*', this.multiplication, 'infix', 4);
@@ -18,22 +24,22 @@ class Calculation {
   }
 
   defineOperator(
-    symbol,
-    f,
+    symbol: string,
+    f: Function | null,
     notation = 'func',
     precedence = 0,
     rightToLeft = false,
   ) {
     if (notation === 'func') precedence = 0;
-    this._symbols[symbol] = {
-      ...this._symbols[symbol],
+    this.symbols[symbol] = {
+      ...this.symbols[symbol],
       [notation]: {
         symbol,
         f,
         notation,
         precedence,
         rightToLeft,
-        argCount: 1 + (notation === 'infix'),
+        argCount: 1 + (notation === 'infix' ? 1 : 0),
       },
       symbol,
       regSymbol:
@@ -41,66 +47,58 @@ class Calculation {
         (/\w$/.test(symbol) ? '\\b' : ''),
     };
   }
-  last(...a) {
-    return a[a.length - 1];
-  }
-  pow(a, b) {
-    return a ** b;
-  }
-  negation(a) {
-    return -a;
-  }
-  addition(a, b) {
-    return a + b;
-  }
-  subtraction(a, b) {
-    return a - b;
-  }
-  multiplication(a, b) {
-    return a * b;
-  }
-  division(a, b) {
-    return a / b;
-  }
-  factorial(a) {
+
+  last = (...a: number[]) => a[a.length - 1];
+
+  negation = (a: number) => -a;
+
+  pow: IOperationBinary = (a, b) => a ** b;
+
+  addition: IOperationBinary = (a, b) => a + b;
+
+  subtraction: IOperationBinary = (a, b) => a - b;
+
+  multiplication: IOperationBinary = (a, b) => a * b;
+
+  division: IOperationBinary = (a, b) => a / b;
+
+  factorial = (a: number) => {
     if (a % 1 || !(+a >= 0)) return NaN;
     if (a > 170) return Infinity;
     let b = 1;
     while (a > 1) b *= a--;
     return b;
-  }
-  calculate(expression) {
-    let match;
-    const values = [],
-      operators = [this._symbols['('].prefix],
-      exec = (_) => {
-        let op = operators.pop();
-        values.push(op.f(...[].concat(...values.splice(-op.argCount))));
-        return op.precedence;
-      },
-      error = (msg) => {
-        let notation = match ? match.index : expression.length;
-        return `${msg} na posição ${notation}:\n${expression}\n${' '.repeat(
-          notation,
-        )}^`;
-      },
-      pattern = new RegExp(
-        '\\d+(?:\\.\\d+)?|' +
-          Object.values(this._symbols)
-            .sort((a, b) => b.symbol.length - a.symbol.length)
-            .map((val) => val.regSymbol)
-            .join('|') +
-          '|(\\S)',
-        'g',
-      );
+  };
+
+  calculate(expression: string | number[]) {
+    let match: any;
+    const values: number[] = [];
+    const operators = [this.symbols['('].prefix];
+    const exec = () => {
+      const op = operators.pop();
+      values.push(op.f(...[].concat(...(values.splice(-op.argCount) as any))));
+      return op.precedence;
+    };
+    const error = (msg: string) => {
+      const notation = match ? match.index : expression.length;
+      return `${msg}:\n${expression}\n${' '.repeat(notation)}^`;
+    };
+    const pattern = new RegExp(
+      `\\d+(?:\\.\\d+)?|${Object.values(this.symbols)
+        .sort((a: any, b: any) => b.symbol.length - a.symbol.length)
+        .map((val: any) => val.regSymbol)
+        .join('|')}|(\\S)`,
+      'g',
+    );
     let afterValue = false;
     pattern.lastIndex = 0;
     do {
-      match = pattern.exec(expression);
-      const [token, bad] = match || [')', undefined],
-        notNumber = this._symbols[token],
-        notNewValue = notNumber && !notNumber.prefix && !notNumber.func,
-        notAfterValue = !notNumber || (!notNumber.postfix && !notNumber.infix);
+      match = pattern.exec(expression as string);
+      const [token, bad] = match || [')', undefined];
+      const notNumber = this.symbols[token];
+      const notNewValue = notNumber && !notNumber.prefix && !notNumber.func;
+      const notAfterValue =
+        !notNumber || (!notNumber.postfix && !notNumber.infix);
       if (bad || (afterValue ? notAfterValue : notNewValue))
         return error('Erro de sintaxe');
       if (afterValue) {
@@ -118,7 +116,7 @@ class Calculation {
       } else if (notNumber) {
         operators.push(notNumber.prefix || notNumber.func);
         if (notNumber.func) {
-          match = pattern.exec(expression);
+          match = pattern.exec(expression as string);
           if (!match || match[0] !== '(')
             return error('Função precisa de parênteses');
         }
@@ -135,4 +133,4 @@ class Calculation {
   }
 }
 
-module.exports = Calculation;
+export default Calculation;
