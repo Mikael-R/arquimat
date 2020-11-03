@@ -16,13 +16,19 @@ function PlayerStatus(): ReactElement {
 
   const totalMatches = Number(localStorage.getItem('totalMatches')) || 0;
 
+  const cardsRevealed = localStorage.getItem('cardsRevealed') || 0;
+
+  const straightHits = localStorage.getItem('straightHits') || 0;
+
   const probabilityOfVictory =
     totalMatches !== 0 ? ((wins / totalMatches) * 100).toFixed(0) : 0;
 
-  // difficultyMostUsed
-
   const timeSpentOnAllMatchesInSeconds =
     Number(localStorage.getItem('timeSpentOnAllMatchesInSeconds')) || 0;
+
+  const averageMatchDurationInSeconds = timeSpentOnAllMatchesInSeconds
+    ? (totalMatches / timeSpentOnAllMatchesInSeconds).toFixed(0)
+    : 0;
 
   const lastCustomExpression =
     localStorage.getItem('lastCustomExpression') || 'nenhuma';
@@ -30,14 +36,6 @@ function PlayerStatus(): ReactElement {
   const cameInLastParty = cameInLastPartyAsMilliseconds
     ? timeSince(new Date(cameInLastPartyAsMilliseconds))
     : '';
-
-  const straightHits = localStorage.getItem('straightHits') || 0;
-
-  const cardsRevealed = localStorage.getItem('cardsRevealed') || 0;
-
-  const averageMatchDurationInSeconds = timeSpentOnAllMatchesInSeconds
-    ? (totalMatches / timeSpentOnAllMatchesInSeconds).toFixed(0)
-    : 0;
 
   return (
     <div className="container" id="page-player-status">
@@ -57,13 +55,11 @@ function PlayerStatus(): ReactElement {
             title="Probabilidade de vitória"
             value={`${probabilityOfVictory}%`}
           />
-          <LabelKeyValue title="Dificuldade mais jogada" value="" />
-
+          {/* timeSpentOnAllMatchesInSeconds */}
           <LabelKeyValue
             title="Duração média das partidas"
             value={`${averageMatchDurationInSeconds} segundos`}
           />
-
           <LabelKeyValue
             title="Última conta customizada"
             value={lastCustomExpression}
