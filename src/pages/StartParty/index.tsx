@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable arrow-body-style */
 import React, { ReactElement, useState, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -10,7 +8,6 @@ import Input from '../../components/Input';
 import PageHeader from '../../components/PageHeader';
 import Select from '../../components/Select';
 import './styles.css';
-import 'react-toastify/dist/ReactToastify.css';
 import Calculation from '../../tools/Calculation';
 import { convertToJsExpression } from '../../tools/convertExpression';
 import convertNodeListOfToArray from '../../tools/convertNodeListOfToArray';
@@ -35,9 +32,6 @@ function StartParty(): ReactElement {
     if (preferences.totalPairs === '') {
       toast.error('Selecione o número de pares!');
       document.getElementById('total-pairs')?.focus();
-    } else if (preferences.maxResult === '') {
-      toast.error('Informe um valor máximo para os resultados!');
-      document.getElementById('max-result')?.focus();
     } else if (
       preferences.customExpressions.length >= Number(preferences.totalPairs)
     ) {
@@ -82,7 +76,7 @@ function StartParty(): ReactElement {
     return customExpressionItems;
   }
 
-  function verifyPreferences(): string {
+  function verifyPreferences(): string | null {
     const customExpressionElements = convertNodeListOfToArray(
       document.getElementsByName('custom-expression'),
     );
@@ -90,7 +84,7 @@ function StartParty(): ReactElement {
     const customExpressionElementLessThanOne = customExpressionElements.find(
       ({ value }) => {
         const calculatedResult = Calc.calculate(convertToJsExpression(value));
-        return Number(calculatedResult) < Number(preferences.maxResult);
+        return Number(calculatedResult) < 1;
       },
     );
 
@@ -127,18 +121,20 @@ function StartParty(): ReactElement {
 
       case !!customExpressionElementLessThanOne:
         customExpressionElementLessThanOne.focus();
-        return `Expressão customizada tem resultado menor que o resultado máximo estabelecido(${preferences.maxResult})`;
+        return 'Expressão customizada tem resultado menor que 1.';
 
       default:
-        return '';
+        return null;
     }
   }
 
   function handleSubmit(event: FormEvent) {
     const errorMessage = verifyPreferences();
 
-    if (errorMessage === '') history.push('/');
-    else {
+    if (errorMessage === null) {
+      toast.info('Infelizmente este recurso ainda não foi concluído!');
+      history.push('/');
+    } else {
       toast.error(errorMessage, { bodyStyle: { whiteSpace: 'pre-line' } });
       event.preventDefault();
     }
