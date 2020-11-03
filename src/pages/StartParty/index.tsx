@@ -143,7 +143,7 @@ function StartParty(): ReactElement {
   }
 
   function setLastCustomExpression(expression: string) {
-    localStorage.setItem('totalMatches', expression);
+    localStorage.setItem('lastCustomExpression', expression);
   }
 
   function handleSubmit(event: FormEvent) {
