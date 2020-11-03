@@ -1,16 +1,23 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable arrow-body-style */
 import React, { ReactElement, useState, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import warningIcon from '../../assets/icons/warning.svg';
+import CheckBox from '../../components/CheckBox';
 import Input from '../../components/Input';
 import PageHeader from '../../components/PageHeader';
 import Select from '../../components/Select';
-
 import './styles.css';
 import 'react-toastify/dist/ReactToastify.css';
+import Calculation from '../../tools/Calculation';
+import { convertToJsExpression } from '../../tools/convertExpression';
+import convertNodeListOfToArray from '../../tools/convertNodeListOfToArray';
 
-type TDificulty = 'easy' | 'medium' | 'hard' | 'impossible' | '';
+const Calc = new Calculation();
+
+type TDifficulty = 'fácil' | 'médio' | 'difícil' | 'impossível' | '';
 
 function StartParty(): ReactElement {
   const history = useHistory();
@@ -18,29 +25,37 @@ function StartParty(): ReactElement {
   const [preferences, setPreferences] = useState({
     totalPairs: '',
     flipTime: '',
-    maxResult: '50',
+    maxResult: '',
     highlightRevealedCards: false,
-    dificulty: '' as TDificulty,
+    difficulty: '' as TDifficulty,
     customExpressions: [] as string[],
   });
 
   function addNewCustomExpression() {
     if (preferences.totalPairs === '') {
       toast.error('Selecione o número de pares!');
+      document.getElementById('total-pairs')?.focus();
+    } else if (preferences.maxResult === '') {
+      toast.error('Informe um valor máximo para os resultados!');
+      document.getElementById('max-result')?.focus();
     } else if (
       preferences.customExpressions.length >= Number(preferences.totalPairs)
     ) {
       toast.error('O número de pares foi atingido!');
+      document.getElementById('total-pairs')?.focus();
     } else if (
       preferences.customExpressions[
         preferences.customExpressions.length - 1
-      ] === '0'
+      ] === ''
     ) {
+      convertNodeListOfToArray(document.getElementsByName('custom-expression'))
+        .pop()
+        .focus();
       toast.error('Preencha o campo anterior!');
     } else {
       setPreferences({
         ...preferences,
-        customExpressions: [...preferences.customExpressions, '0'],
+        customExpressions: [...preferences.customExpressions, ''],
       });
     }
   }
@@ -49,7 +64,7 @@ function StartParty(): ReactElement {
     const customExpressionItems = preferences.customExpressions.map(
       (expression, index) => {
         const returnValue = index === position ? value : expression;
-        return returnValue === '' ? '0' : returnValue;
+        return returnValue === '' ? '' : returnValue;
       },
     );
 
@@ -67,40 +82,66 @@ function StartParty(): ReactElement {
     return customExpressionItems;
   }
 
-  function verifyPreferences() {
+  function verifyPreferences(): string {
+    const customExpressionElements = convertNodeListOfToArray(
+      document.getElementsByName('custom-expression'),
+    );
+
+    const customExpressionElementLessThanOne = customExpressionElements.find(
+      ({ value }) => {
+        const calculatedResult = Calc.calculate(convertToJsExpression(value));
+        return Number(calculatedResult) < Number(preferences.maxResult);
+      },
+    );
+
+    const customExpressionElementInvalid = customExpressionElements.find(
+      ({ value }) => {
+        const calculatedResult = Calc.calculate(convertToJsExpression(value));
+        if (typeof calculatedResult === 'string') {
+          return true;
+        }
+        return false;
+      },
+    );
+
     switch (true) {
       case preferences.totalPairs === '':
-        document.getElementById('total-pairs')?.scrollIntoView();
         document.getElementById('total-pairs')?.focus();
-        break;
+        return 'Preencha todos os campos';
 
       case preferences.flipTime === '':
-        document.getElementById('flip-time')?.scrollIntoView();
         document.getElementById('flip-time')?.focus();
-        break;
+        return 'Preencha todos os campos';
 
-      case preferences.dificulty === '':
-        document.getElementById('dificulty')?.scrollIntoView();
-        document.getElementById('dificulty')?.focus();
-        break;
+      case preferences.difficulty === '':
+        document.getElementById('difficulty')?.focus();
+        return 'Preencha todos os campos';
 
       case preferences.maxResult === '':
-        document.getElementById('max-result')?.scrollIntoView();
         document.getElementById('max-result')?.focus();
-        break;
+        return 'Preencha todos os campos';
+
+      case !!customExpressionElementInvalid:
+        customExpressionElementInvalid.focus();
+        return Calc.calculate(customExpressionElementInvalid.value) as string;
+
+      case !!customExpressionElementLessThanOne:
+        customExpressionElementLessThanOne.focus();
+        return `Expressão customizada tem resultado menor que o resultado máximo estabelecido(${preferences.maxResult})`;
 
       default:
-        return true;
+        return '';
     }
-    toast.error('Preencha todos os campos');
-    return false;
   }
 
   function handleSubmit(event: FormEvent) {
-    const passed = verifyPreferences();
+    const errorMessage = verifyPreferences();
 
-    if (passed) history.push('/');
-    else event.preventDefault();
+    if (errorMessage === '') history.push('/');
+    else {
+      toast.error(errorMessage, { bodyStyle: { whiteSpace: 'pre-line' } });
+      event.preventDefault();
+    }
   }
 
   return (
@@ -111,7 +152,7 @@ function StartParty(): ReactElement {
       />
 
       <main>
-        <form onSubmit={handleSubmit}>
+        <div onSubmit={handleSubmit}>
           <fieldset>
             <legend>Regras de jogo</legend>
             <Select
@@ -154,19 +195,19 @@ function StartParty(): ReactElement {
               }}
             />
             <Select
-              name="dificulty"
+              name="difficulty"
               label="Dificuldade"
               options={[
-                { value: 'easy', label: 'Burro' },
-                { value: 'medium', label: 'Estudante' },
-                { value: 'hard', label: 'Inteligente' },
-                { value: 'impossible', label: 'Super Dotado' },
+                { value: 'fácil', label: 'Burro' },
+                { value: 'médio', label: 'Estudante' },
+                { value: 'difícil', label: 'Inteligente' },
+                { value: 'impossível', label: 'Super Dotado' },
               ]}
-              value={preferences.dificulty}
+              value={preferences.difficulty}
               onChange={({ target }) => {
                 setPreferences({
                   ...preferences,
-                  dificulty: target.value as TDificulty,
+                  difficulty: target.value as TDifficulty,
                 });
               }}
             />
@@ -193,9 +234,8 @@ function StartParty(): ReactElement {
                 }
               }}
             />
-            <Input
+            <CheckBox
               name="highlight-revealed-cards"
-              type="checkbox"
               label="Destacar cards revelados"
               value={preferences.highlightRevealedCards === true ? 1 : 0}
               onChange={() => {
@@ -236,10 +276,11 @@ function StartParty(): ReactElement {
               <br />
               Preencha todos os dados.
             </p>
-            <button type="submit">Iniciar Partida</button>
+            <button type="submit" onClick={handleSubmit}>
+              Iniciar Partida
+            </button>
           </footer>
-          <ToastContainer />
-        </form>
+        </div>
       </main>
     </div>
   );
