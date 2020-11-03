@@ -4,20 +4,41 @@ import React, { ReactElement } from 'react';
 import purpleHeartIcon from '../../assets/icons/purple-heart.svg';
 import LabelKeyValue from '../../components/LabelKeyValue';
 import PageHeader from '../../components/PageHeader';
+import timeSince from '../../tools/timeSince';
 
 import './styles.css';
 
 function PlayerStatus(): ReactElement {
-  const playerAnalytics = {
-    wins: 2,
-    totalParties: 2,
-    dificultyMostUsed: 'fácil',
-    lastCustomAccount: '2x2',
-    cameInLast: 'hoje',
-    timeSpentOnAllPartiesInSeconds: 60,
-    straightHits: '2',
-    cardsRevealed: '20',
-  };
+  const cameInLastPartyAsMilliseconds = Number(
+    localStorage.getItem('cameInLastPartyAsMilliseconds'),
+  );
+
+  const wins = Number(localStorage.getItem('wins')) || 0;
+
+  const totalMatches = Number(localStorage.getItem('totalMatches')) || 0;
+
+  const probabilityOfVictory =
+    totalMatches !== 0 ? ((wins / totalMatches) * 100).toFixed(0) : 0;
+
+  // difficultyMostUsed
+
+  const timeSpentOnAllMatchesInSeconds =
+    Number(localStorage.getItem('timeSpentOnAllMatchesInSeconds')) || 0;
+
+  const lastCustomExpression =
+    localStorage.getItem('lastCustomExpression') || 'nenhuma';
+
+  const cameInLastParty = cameInLastPartyAsMilliseconds
+    ? timeSince(new Date(cameInLastPartyAsMilliseconds))
+    : '';
+
+  const straightHits = localStorage.getItem('straightHits') || 0;
+
+  const cardsRevealed = localStorage.getItem('cardsRevealed') || 0;
+
+  const averageMatchDurationInSeconds = timeSpentOnAllMatchesInSeconds
+    ? (totalMatches / timeSpentOnAllMatchesInSeconds).toFixed(0)
+    : 0;
 
   return (
     <div className="container" id="page-player-status">
@@ -29,46 +50,28 @@ function PlayerStatus(): ReactElement {
       <main>
         <fieldset>
           <legend>Estatísticas</legend>
-          <LabelKeyValue title="Vitórias" value={playerAnalytics.wins} />
-          <LabelKeyValue
-            title="Partidas jogadas"
-            value={playerAnalytics.totalParties}
-          />
-          <LabelKeyValue
-            title="Cards revelados"
-            value={playerAnalytics.cardsRevealed}
-          />
-          <LabelKeyValue
-            title="Acertos seguidos"
-            value={playerAnalytics.straightHits}
-          />
+          <LabelKeyValue title="Vitórias" value={wins} />
+          <LabelKeyValue title="Partidas jogadas" value={totalMatches} />
+          <LabelKeyValue title="Cards revelados" value={cardsRevealed} />
+          <LabelKeyValue title="Acertos seguidos" value={straightHits} />
           <LabelKeyValue
             title="Probabilidade de vitória"
-            value={`${(
-              (playerAnalytics.wins / playerAnalytics.totalParties) *
-              100
-            ).toFixed(0)}%`}
+            value={`${probabilityOfVictory}%`}
           />
-          <LabelKeyValue
-            title="Dificuldade mais jogada"
-            value={playerAnalytics.dificultyMostUsed}
-          />
+          <LabelKeyValue title="Dificuldade mais jogada" value="" />
 
           <LabelKeyValue
-            title="Duração média de partida"
-            value={`${(
-              playerAnalytics.timeSpentOnAllPartiesInSeconds /
-              playerAnalytics.totalParties
-            ).toFixed(0)} segundos`}
+            title="Duração média das partidas"
+            value={`${averageMatchDurationInSeconds} segundos`}
           />
 
           <LabelKeyValue
             title="Última conta customizada"
-            value={playerAnalytics.lastCustomAccount}
+            value={lastCustomExpression}
           />
           <LabelKeyValue
-            title="Entrou por último"
-            value={playerAnalytics.cameInLast}
+            title="Última partida jogada"
+            value={cameInLastParty}
           />
         </fieldset>
 
