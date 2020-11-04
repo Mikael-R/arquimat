@@ -56,8 +56,10 @@ function PlayerStatus(): ReactElement {
             value={`${probabilityOfVictory}%`}
           />
           <LabelKeyValue
-            title="Tempo jogado (todas as partidas)"
-            value={timeSince(timeSpentOnAllMatchesInSeconds)}
+            title="Horas de gameplay"
+            value={`${(timeSpentOnAllMatchesInSeconds / 3600).toFixed(
+              1,
+            )} horas`}
           />
           <LabelKeyValue
             title="Duração média das partidas"
