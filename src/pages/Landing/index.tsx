@@ -40,10 +40,10 @@ function Landing(): ReactElement {
 
         <div className="buttons-container">
           <Link to="/start-match" className="start-match">
-            Jogar
+            &#x1F3AE; Jogar
           </Link>
           <Link to="/player-status" className="player-status">
-            Estatísticas
+            &#x1F4D6; Estatísticas
           </Link>
         </div>
 
