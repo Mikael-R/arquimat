@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable operator-linebreak */
 import React, { ReactElement, useState, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -14,7 +15,6 @@ import {
   convertToJsExpression,
   convertToMathExpression,
 } from '../../tools/convertExpression';
-import convertNodeListOfToArray from '../../tools/convertNodeListOfToArray';
 
 const Calc = new Calculation();
 
@@ -46,9 +46,8 @@ function StartMatch(): ReactElement {
         preferences.customExpressions.length - 1
       ] === ''
     ) {
-      convertNodeListOfToArray(document.getElementsByName('custom-expression'))
-        .pop()
-        .focus();
+      const customExpressions = document.getElementsByName('custom-expression');
+      customExpressions[customExpressions.length - 1].focus();
       toast.error('Preencha o campo anterior!');
     } else {
       setPreferences({
@@ -81,26 +80,31 @@ function StartMatch(): ReactElement {
   }
 
   function verifyPreferences(): string | null {
-    const customExpressionElements = convertNodeListOfToArray(
-      document.getElementsByName('custom-expression'),
+    const customExpressionHTMLElements = document.getElementsByName(
+      'custom-expression',
     );
 
-    const customExpressionElementLessThanOne = customExpressionElements.find(
-      ({ value }) => {
-        const calculatedResult = Calc.calculate(convertToJsExpression(value));
-        return Number(calculatedResult) < 1;
-      },
-    );
+    const customExpressionElements = {
+      lessThanOne: [] as HTMLElement[],
+      invalid: [] as HTMLElement[],
+      infinity: [] as HTMLElement[],
+    };
 
-    const customExpressionElementInvalid = customExpressionElements.find(
-      ({ value }) => {
-        const calculatedResult = Calc.calculate(convertToJsExpression(value));
-        if (typeof calculatedResult === 'string') {
-          return true;
-        }
-        return false;
-      },
-    );
+    customExpressionHTMLElements.forEach((element) => {
+      const calculatedResult = Calc.calculate(
+        convertToJsExpression((element as any).value),
+      );
+
+      if (Number(calculatedResult) < 1) {
+        customExpressionElements.lessThanOne.push(element);
+      }
+      if (typeof calculatedResult === 'string') {
+        customExpressionElements.invalid.push(element);
+      }
+      if (calculatedResult === Infinity) {
+        customExpressionElements.infinity.push(element);
+      }
+    });
 
     switch (true) {
       case preferences.totalPairs === '':
@@ -119,12 +123,18 @@ function StartMatch(): ReactElement {
         document.getElementById('max-result')?.focus();
         return 'Preencha todos os campos';
 
-      case !!customExpressionElementInvalid:
-        customExpressionElementInvalid.focus();
-        return Calc.calculate(customExpressionElementInvalid.value) as string;
+      case !!customExpressionElements.invalid.length:
+        customExpressionElements.invalid[0].focus();
+        return Calc.calculate(
+          (customExpressionElements.invalid[0] as any).value,
+        ) as string;
 
-      case !!customExpressionElementLessThanOne:
-        customExpressionElementLessThanOne.focus();
+      case !!customExpressionElements.infinity.length:
+        customExpressionElements.infinity[0].focus();
+        return 'Expressão customizada não pode conter divisão por 0.';
+
+      case !!customExpressionElements.lessThanOne.length:
+        customExpressionElements.lessThanOne[0].focus();
         return 'Expressão customizada tem resultado menor que 1.';
 
       default:
