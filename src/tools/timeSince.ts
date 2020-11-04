@@ -1,35 +1,30 @@
 /* eslint-disable operator-linebreak */
-type TMetric = 'anos' | 'mêses' | 'dias' | 'horas' | 'minutos' | 'segundos';
-
 interface ITimeSince {
   (time: number | Date): string;
 }
 
 const timeSince: ITimeSince = (time) => {
-  let metric: TMetric = 'segundos';
-  let interval = 0;
-
   const seconds =
     typeof time === 'number'
       ? time
       : Math.floor((new Date().getTime() - time.getTime()) / 1000);
 
-  interval = Math.floor(seconds / 31536000);
-  if (interval > 1) metric = 'anos';
+  let interval = Math.floor(seconds / 31536000);
+  if (interval > 1) return `${interval} anos`;
 
   interval = Math.floor(seconds / 2592000);
-  if (interval > 1) metric = 'mêses';
+  if (interval > 1) return `${interval} mêses`;
 
   interval = Math.floor(seconds / 86400);
-  if (interval > 1) metric = 'dias';
+  if (interval > 1) return `${interval} dias`;
 
   interval = Math.floor(seconds / 3600);
-  if (interval > 1) metric = 'horas';
+  if (interval > 1) return `${interval} horas`;
 
   interval = Math.floor(seconds / 60);
-  if (interval > 1) metric = 'minutos';
+  if (interval > 1) return `${interval} minutos`;
 
-  return `${interval} ${metric}`;
+  return `${seconds} segundos`;
 };
 
 export default timeSince;
