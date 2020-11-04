@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import React, { ReactElement, useState, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -153,14 +154,17 @@ function StartMatch(): ReactElement {
     const errorMessage = verifyPreferences();
 
     if (errorMessage === null) {
+      const lastCustomExpression =
+        preferences.customExpressions[preferences.customExpressions.length - 1];
+
       toast.info(
         'Infelizmente os cards não estão prontos, por que não volta mais tarde?',
       );
+
       setCameInLastMatch();
       setTotalMatches();
-      setLastCustomExpression(
-        preferences.customExpressions[preferences.customExpressions.length - 1],
-      );
+      lastCustomExpression && setLastCustomExpression(lastCustomExpression);
+
       history.push('/');
     } else {
       toast.error(errorMessage, { bodyStyle: { whiteSpace: 'pre-line' } });
