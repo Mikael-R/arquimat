@@ -19,7 +19,8 @@
 }
 
 .game-image {
-  width: 90%;
+  width: 50%;
+  margin-left: 25%;
 }
 
 .logo-container {
@@ -95,14 +96,12 @@
     align-self: center;
     margin: 0;
   }
-  .logo-container img {
-    height: 100%;
-  }
   .logo-container h2 {
     text-align: initial;
     font-size: 3.6rem;
   }
   .game-image {
+    width: 90%;
     grid-area: game;
     justify-self: end;
   }
