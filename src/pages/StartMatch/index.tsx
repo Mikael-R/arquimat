@@ -219,6 +219,7 @@ function StartMatch(): ReactElement {
               name="flip-time"
               label="Tempo de visualização"
               options={[
+                { value: '-1', label: 'Sem tempo' },
                 { value: '4', label: '4 segundos' },
                 { value: '5', label: '5 segundos' },
                 { value: '6', label: '6 segundos' },
