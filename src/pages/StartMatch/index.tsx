@@ -19,18 +19,33 @@ import {
 const Calc = new Calculation();
 
 type TDifficulty = 'fácil' | 'médio' | 'difícil' | 'impossível' | '';
+interface IPreferences {
+  totalPairs: string;
+  flipTime: string;
+  maxResult: string;
+  highlightRevealedCards: boolean;
+  difficulty: TDifficulty;
+  customExpressions: string[];
+}
 
 function StartMatch(): ReactElement {
   const history = useHistory();
 
-  const [preferences, setPreferences] = useState({
-    totalPairs: '',
-    flipTime: '',
-    maxResult: '',
-    highlightRevealedCards: false,
-    difficulty: '' as TDifficulty,
-    customExpressions: [] as string[],
-  });
+  const lastPreferences: IPreferences | null = (() => {
+    const data = sessionStorage.getItem('lastPreferences');
+    return data ? JSON.parse(data) : null;
+  })();
+
+  const [preferences, setPreferences] = useState<IPreferences>(
+    lastPreferences || {
+      totalPairs: '',
+      flipTime: '',
+      maxResult: '',
+      highlightRevealedCards: false,
+      difficulty: '',
+      customExpressions: [],
+    },
+  );
 
   function addNewCustomExpression() {
     if (preferences.totalPairs === '') {
@@ -164,6 +179,11 @@ function StartMatch(): ReactElement {
     const errorMessage = verifyPreferences();
 
     if (errorMessage === null) {
+      sessionStorage.setItem(
+        'lastPreferences',
+        JSON.stringify({ ...preferences, customExpressions: [] }),
+      );
+
       const lastCustomExpression =
         preferences.customExpressions[preferences.customExpressions.length - 1];
 
