@@ -22,16 +22,16 @@ const cardFrontFaceIcon =
   cardFrontFaceIcons[randInt(0, cardFrontFaceIcons.length)];
 
 function Match(): ReactElement {
+  const [cardsContent, setCardsContent] = useState<string[]>([]);
   const [showWinModal, setShowWinModal] = useState(false);
 
+  const cardsDisable: HTMLDivElement[] = [];
   const searchParams = new URLSearchParams(window.location.search);
 
   const totalCards = Number(searchParams.get('totalPairs')) * 2 || 2;
   const flipTime = Number(searchParams.get('flipTime'));
   const highlightRevealedCards = !!searchParams.get('highlightRevealedCards');
   const customExpressions = searchParams.getAll('customExpression');
-
-  const cardsDisable: HTMLDivElement[] = [];
 
   let hasFlippedCard = false;
   let lockBoard = false;
@@ -106,9 +106,7 @@ function Match(): ReactElement {
 
     const isWin = totalCards === cardsDisable.length;
 
-    if (isWin) {
-      setTimeout(() => setShowWinModal(true), 1500);
-    }
+    if (isWin) setTimeout(() => setShowWinModal(true), 1500);
   }
 
   function generateRandomExpression() {
@@ -118,22 +116,25 @@ function Match(): ReactElement {
     return { expression, result };
   }
 
-  function getCards() {
-    const cards = [];
+  function getCardsContent() {
+    const contents: string[] = [];
 
     customExpressions.forEach((expression) => {
-      cards.push(expression, Calc.calculate(convertToJsExpression(expression)));
+      contents.push(
+        expression,
+        Calc.calculate(convertToJsExpression(expression)) as string,
+      );
     });
 
-    while (cards.length < totalCards) {
+    while (contents.length < totalCards) {
       const { expression, result } = generateRandomExpression();
-      cards.push(expression, result);
+      contents.push(expression, result);
     }
 
-    return cards.sort(() => 0.5 - Math.random());
+    return contents.sort(() => 0.5 - Math.random());
   }
 
-  const cards = getCards();
+  setCardsContent(getCardsContent());
 
   return (
     <div
@@ -145,7 +146,7 @@ function Match(): ReactElement {
 
       <main>
         <section className="memory-game">
-          {cards.map((expressionOrResult, index) => (
+          {cardsContent.map((expressionOrResult, index) => (
             <div
               key={Number(index)}
               className="memory-card"
