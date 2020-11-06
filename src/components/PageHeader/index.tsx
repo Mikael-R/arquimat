@@ -8,18 +8,22 @@ import './styles.css';
 interface IPageHeaderProps {
   title: string;
   description?: string;
+  hideBackButton?: boolean;
 }
 
 const PageHeader: React.FC<IPageHeaderProps> = ({
   title,
   description,
   children,
+  hideBackButton,
 }) => (
   <header className="page-header">
     <div className="top-bar-container">
-      <Link to="/">
-        <img src={backIcon} alt="Voltar" />
-      </Link>
+      {!hideBackButton && (
+        <Link to="/">
+          <img src={backIcon} alt="Voltar" />
+        </Link>
+      )}
       <div id="logo">Arquimat</div>
     </div>
 
