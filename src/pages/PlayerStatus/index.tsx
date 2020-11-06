@@ -3,9 +3,13 @@ import React, { ReactElement } from 'react';
 
 import LabelKeyValue from '../../components/LabelKeyValue';
 import PageHeader from '../../components/PageHeader';
+import Calculation from '../../tools/Calculation';
+import { convertToJsExpression } from '../../tools/convertExpression';
 import timeSince from '../../tools/timeSince';
 
 import './styles.css';
+
+const Calc = new Calculation();
 
 function PlayerStatus(): ReactElement {
   const cameInLastMatchAsMilliseconds = Number(
@@ -30,8 +34,10 @@ function PlayerStatus(): ReactElement {
     ? Number((totalMatches / timeSpentOnAllMatchesInSeconds).toFixed(0))
     : 0;
 
-  const lastCustomExpression =
-    localStorage.getItem('lastCustomExpression') || 'nenhuma';
+  const lastCustomExpression = localStorage.getItem('lastCustomExpression');
+  const lastCustomExpressionCalculated = lastCustomExpression
+    ? String(Calc.calculate(convertToJsExpression(lastCustomExpression)))
+    : '';
 
   const cameInLastMatch = cameInLastMatchAsMilliseconds
     ? new Date(cameInLastMatchAsMilliseconds)
@@ -67,7 +73,11 @@ function PlayerStatus(): ReactElement {
           />
           <LabelKeyValue
             title="Última conta customizada"
-            value={lastCustomExpression}
+            value={
+              lastCustomExpression
+                ? `${lastCustomExpression} = ${lastCustomExpressionCalculated}`
+                : 'nenhuma'
+            }
           />
           {cameInLastMatch !== null && (
             <LabelKeyValue
