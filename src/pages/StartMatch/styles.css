@@ -45,12 +45,6 @@
   color: var(--color-primary-dark);
 }
 
-#start-match-form main .input-block label {
-  color: var(--color-text-complement);
-}
-#start-match-form main fieldset .input-block + .textarea-block {
-  margin-top: 2.4rem;
-}
 #start-match-form main fieldset .select-block + .input-block {
   margin-top: 2.4rem;
 }
