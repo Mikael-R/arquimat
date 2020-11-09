@@ -4,13 +4,11 @@ import './styles.css';
 
 interface CheckBoxProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  name: string;
   shouldBreakLineBetweenLabelAndCheckBox?: boolean;
 }
 
 const CheckBox: React.FC<CheckBoxProps> = ({
   label,
-  name,
   shouldBreakLineBetweenLabelAndCheckBox,
   ...rest
 }: CheckBoxProps) => (
@@ -22,8 +20,8 @@ const CheckBox: React.FC<CheckBoxProps> = ({
         : undefined
     }
   >
-    <label htmlFor={name}>{label}</label>
-    <input type="checkbox" name={name} id={name} {...rest} />
+    <label>{label}</label>
+    <input type="checkbox" {...rest} />
   </div>
 );
 
