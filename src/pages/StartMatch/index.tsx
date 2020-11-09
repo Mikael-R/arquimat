@@ -120,22 +120,6 @@ function StartMatch(): ReactElement {
     });
 
     switch (true) {
-      case preferences.totalPairs === '':
-        document.getElementById('total-pairs')?.focus();
-        return 'Preencha todos os campos';
-
-      case preferences.flipTime === '':
-        document.getElementById('flip-time')?.focus();
-        return 'Preencha todos os campos';
-
-      case preferences.difficulty === '':
-        document.getElementById('difficulty')?.focus();
-        return 'Preencha todos os campos';
-
-      case preferences.maxResult === '':
-        document.getElementById('max-result')?.focus();
-        return 'Preencha todos os campos';
-
       case !!customExpressionElements.invalid.length:
         customExpressionElements.invalid[0].focus();
         return Calc.calculate(
@@ -208,11 +192,11 @@ function StartMatch(): ReactElement {
       />
 
       <main>
-        <div onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <fieldset>
             <legend>Regras de jogo</legend>
             <Select
-              name="total-pairs"
+              required
               label="Número de pares"
               options={[
                 { value: '3', label: '3 pares' },
@@ -222,19 +206,19 @@ function StartMatch(): ReactElement {
                 { value: '7', label: '7 pares' },
                 { value: '8', label: '8 pares' }
               ]}
-              value={preferences.totalPairs}
-              onChange={({ target }) => {
+              values={[preferences.totalPairs]}
+              onChange={values => {
                 setPreferences({
                   ...preferences,
-                  totalPairs: target.value,
+                  totalPairs: values[0],
                   customExpressions: customExpressionsByTotalPairs(
-                    Number(target.value)
+                    Number(values[0])
                   )
                 });
               }}
             />
             <Select
-              name="flip-time"
+              required
               label="Tempo de visualização"
               options={[
                 { value: '-1', label: 'Sem tempo' },
@@ -246,13 +230,13 @@ function StartMatch(): ReactElement {
                 { value: '9', label: '9 segundos' },
                 { value: '10', label: '10 segundos' }
               ]}
-              value={preferences.flipTime}
-              onChange={({ target }) => {
-                setPreferences({ ...preferences, flipTime: target.value });
+              values={[preferences.flipTime]}
+              onChange={values => {
+                setPreferences({ ...preferences, flipTime: values[0] });
               }}
             />
             <Select
-              name="difficulty"
+              required
               label="Dificuldade"
               options={[
                 { value: 'fácil', label: 'Burro' },
@@ -260,17 +244,17 @@ function StartMatch(): ReactElement {
                 { value: 'difícil', label: 'Inteligente' },
                 { value: 'impossível', label: 'Super Dotado' }
               ]}
-              value={preferences.difficulty}
-              onChange={({ target }) => {
+              values={[preferences.difficulty]}
+              onChange={values => {
                 setPreferences({
                   ...preferences,
-                  difficulty: target.value as TDifficulty
+                  difficulty: values[0] as TDifficulty
                 });
               }}
             />
             <Input
               shouldBreakLineBetweenLabelAndInput
-              name="max-result"
+              required
               type="number"
               min="1"
               max="99"
@@ -292,7 +276,7 @@ function StartMatch(): ReactElement {
               }}
             />
             <CheckBox
-              name="highlight-revealed-cards"
+              required
               label="Destacar cards revelados"
               value={preferences.highlightRevealedCards === true ? 1 : 0}
               onChange={() => {
@@ -336,11 +320,9 @@ function StartMatch(): ReactElement {
               <br />
               Preencha todos os dados.
             </p>
-            <button type="submit" onClick={handleSubmit}>
-              Iniciar Partida
-            </button>
+            <button type="submit">Iniciar Partida</button>
           </footer>
-        </div>
+        </form>
       </main>
     </div>
   );
