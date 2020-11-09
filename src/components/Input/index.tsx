@@ -4,13 +4,11 @@ import './styles.css';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  name: string;
   shouldBreakLineBetweenLabelAndInput?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
   label,
-  name,
   shouldBreakLineBetweenLabelAndInput,
   ...rest
 }: InputProps) => (
@@ -22,8 +20,8 @@ const Input: React.FC<InputProps> = ({
         : undefined
     }
   >
-    <label htmlFor={name}>{label}</label>
-    <input type="text" name={name} id={name} {...rest} />
+    <label>{label}</label>
+    <input type="text" {...rest} />
   </div>
 );
 
