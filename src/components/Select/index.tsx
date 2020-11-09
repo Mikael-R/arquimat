@@ -1,10 +1,12 @@
-import React, { SelectHTMLAttributes } from 'react';
+import React from 'react';
+import SelectDropDown, {
+  SelectProps as SelectDropDownProps
+} from 'react-dropdown-select';
 
 import './styles.css';
 
-interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+interface SelectProps extends SelectDropDownProps<any> {
   label: string;
-  name: string;
   options: {
     value: string;
     label: string;
@@ -13,22 +15,20 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 
 const Select: React.FC<SelectProps> = ({
   label,
-  name,
   options,
   ...rest
 }: SelectProps) => (
   <div className="select-block">
-    <label htmlFor={name}>{label}</label>
-    <select value="" onChange={() => null} id={name} {...rest}>
-      <option value="" onChange={() => null} disabled hidden>
-        Selecione uma opção
-      </option>
-      {options.map((option, index) => (
-        <option key={index as number} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <label>{label}</label>
+    <SelectDropDown
+      required
+      separator
+      searchable={false}
+      style={{ borderRadius: '0.8rem' }}
+      color="var(--color-primary)"
+      options={options}
+      {...rest}
+    />
   </div>
 );
 
