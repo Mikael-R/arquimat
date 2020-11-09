@@ -1,4 +1,3 @@
-/* eslint-disable react/require-default-props */
 import React, { InputHTMLAttributes } from 'react';
 
 import './styles.css';

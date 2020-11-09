@@ -1,4 +1,3 @@
-/* eslint-disable operator-linebreak */
 import React, { ReactElement } from 'react';
 
 import LabelKeyValue from '../../components/LabelKeyValue';
@@ -13,7 +12,7 @@ const Calc = new Calculation();
 
 function PlayerStatus(): ReactElement {
   const cameInLastMatchAsMilliseconds = Number(
-    localStorage.getItem('cameInLastMatchAsMilliseconds'),
+    localStorage.getItem('cameInLastMatchAsMilliseconds')
   );
 
   const wins = Number(localStorage.getItem('wins')) || 0;
@@ -64,7 +63,7 @@ function PlayerStatus(): ReactElement {
           <LabelKeyValue
             title="Horas de gameplay"
             value={`${(timeSpentOnAllMatchesInSeconds / 3600).toFixed(
-              1,
+              1
             )} horas`}
           />
           <LabelKeyValue

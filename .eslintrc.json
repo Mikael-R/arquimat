@@ -66,7 +66,15 @@
       }
     ],
     "react/prop-types": ["off"],
-    "react/jsx-props-no-spreading": ["off"]
+    "react/jsx-props-no-spreading": ["off"],
+    "comma-dangle": "off",
+    "operator-linebreak": "off",
+    "implicit-arrow-linebreak": "off",
+    "react/require-default-props": "off",
+    "arrow-parens": "off",
+    "no-param-reassign": "off",
+    "no-use-before-define": "off",
+    "object-curly-newline": "off"
   },
   "settings": {
     "import/resolver": {

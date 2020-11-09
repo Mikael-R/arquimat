@@ -1,5 +1,3 @@
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable operator-linebreak */
 import React, { ReactElement, useState, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -13,7 +11,7 @@ import './styles.css';
 import Calculation from '../../tools/Calculation';
 import {
   convertToJsExpression,
-  convertToMathExpression,
+  convertToMathExpression
 } from '../../tools/convertExpression';
 
 const Calc = new Calculation();
@@ -43,8 +41,8 @@ function StartMatch(): ReactElement {
       maxResult: '',
       highlightRevealedCards: false,
       difficulty: '',
-      customExpressions: [],
-    },
+      customExpressions: []
+    }
   );
 
   function addNewCustomExpression() {
@@ -67,7 +65,7 @@ function StartMatch(): ReactElement {
     } else {
       setPreferences({
         ...preferences,
-        customExpressions: [...preferences.customExpressions, ''],
+        customExpressions: [...preferences.customExpressions, '']
       });
     }
   }
@@ -77,18 +75,18 @@ function StartMatch(): ReactElement {
       (expression, index) => {
         const returnValue = index === position ? value : expression;
         return returnValue === '' ? '' : returnValue;
-      },
+      }
     );
 
     setPreferences({
       ...preferences,
-      customExpressions: customExpressionItems,
+      customExpressions: customExpressionItems
     });
   }
 
   function customExpressionsByTotalPairs(totalPairs: number) {
     const customExpressionItems = preferences.customExpressions.filter(
-      (_, index) => index < totalPairs,
+      (_, index) => index < totalPairs
     );
 
     return customExpressionItems;
@@ -96,18 +94,18 @@ function StartMatch(): ReactElement {
 
   function verifyPreferences(): string | null {
     const customExpressionHTMLElements = document.getElementsByName(
-      'custom-expression',
+      'custom-expression'
     );
 
     const customExpressionElements = {
       lessThanOne: [] as HTMLElement[],
       invalid: [] as HTMLElement[],
-      infinity: [] as HTMLElement[],
+      infinity: [] as HTMLElement[]
     };
 
-    customExpressionHTMLElements.forEach((element) => {
+    customExpressionHTMLElements.forEach(element => {
       const calculatedResult = Calc.calculate(
-        convertToJsExpression((element as any).value),
+        convertToJsExpression((element as any).value)
       );
 
       if (Number(calculatedResult) < 1) {
@@ -141,7 +139,7 @@ function StartMatch(): ReactElement {
       case !!customExpressionElements.invalid.length:
         customExpressionElements.invalid[0].focus();
         return Calc.calculate(
-          (customExpressionElements.invalid[0] as any).value,
+          (customExpressionElements.invalid[0] as any).value
         ) as string;
 
       case !!customExpressionElements.infinity.length:
@@ -160,14 +158,14 @@ function StartMatch(): ReactElement {
   function setCameInLastMatch() {
     localStorage.setItem(
       'cameInLastMatchAsMilliseconds',
-      String(new Date().getTime()),
+      String(new Date().getTime())
     );
   }
 
   function setTotalMatches() {
     localStorage.setItem(
       'totalMatches',
-      String(Number(localStorage.getItem('totalMatches') || 0) + 1),
+      String(Number(localStorage.getItem('totalMatches') || 0) + 1)
     );
   }
 
@@ -181,14 +179,14 @@ function StartMatch(): ReactElement {
     if (errorMessage === null) {
       sessionStorage.setItem(
         'lastPreferences',
-        JSON.stringify({ ...preferences, customExpressions: [] }),
+        JSON.stringify({ ...preferences, customExpressions: [] })
       );
 
       const lastCustomExpression =
         preferences.customExpressions[preferences.customExpressions.length - 1];
 
       toast.info(
-        'Infelizmente os cards não estão prontos, por que não volta mais tarde?',
+        'Infelizmente os cards não estão prontos, por que não volta mais tarde?'
       );
 
       setCameInLastMatch();
@@ -222,7 +220,7 @@ function StartMatch(): ReactElement {
                 { value: '5', label: '5 pares' },
                 { value: '6', label: '6 pares' },
                 { value: '7', label: '7 pares' },
-                { value: '8', label: '8 pares' },
+                { value: '8', label: '8 pares' }
               ]}
               value={preferences.totalPairs}
               onChange={({ target }) => {
@@ -230,8 +228,8 @@ function StartMatch(): ReactElement {
                   ...preferences,
                   totalPairs: target.value,
                   customExpressions: customExpressionsByTotalPairs(
-                    Number(target.value),
-                  ),
+                    Number(target.value)
+                  )
                 });
               }}
             />
@@ -246,7 +244,7 @@ function StartMatch(): ReactElement {
                 { value: '7', label: '7 segundos' },
                 { value: '8', label: '8 segundos' },
                 { value: '9', label: '9 segundos' },
-                { value: '10', label: '10 segundos' },
+                { value: '10', label: '10 segundos' }
               ]}
               value={preferences.flipTime}
               onChange={({ target }) => {
@@ -260,13 +258,13 @@ function StartMatch(): ReactElement {
                 { value: 'fácil', label: 'Burro' },
                 { value: 'médio', label: 'Estudante' },
                 { value: 'difícil', label: 'Inteligente' },
-                { value: 'impossível', label: 'Super Dotado' },
+                { value: 'impossível', label: 'Super Dotado' }
               ]}
               value={preferences.difficulty}
               onChange={({ target }) => {
                 setPreferences({
                   ...preferences,
-                  difficulty: target.value as TDifficulty,
+                  difficulty: target.value as TDifficulty
                 });
               }}
             />
@@ -281,7 +279,7 @@ function StartMatch(): ReactElement {
               onFocus={() => {
                 if (preferences.maxResult === '') {
                   toast.info(
-                    'O resultado das expressões customizadas não são afetadas por este resultado!',
+                    'O resultado das expressões customizadas não são afetadas por este resultado!'
                   );
                 }
               }}
@@ -300,7 +298,7 @@ function StartMatch(): ReactElement {
               onChange={() => {
                 setPreferences({
                   ...preferences,
-                  highlightRevealedCards: !preferences.highlightRevealedCards,
+                  highlightRevealedCards: !preferences.highlightRevealedCards
                 });
               }}
             />
@@ -323,7 +321,7 @@ function StartMatch(): ReactElement {
                   onChange={({ target }) => {
                     addNewCustomExpressionValue(
                       index,
-                      convertToMathExpression(target.value),
+                      convertToMathExpression(target.value)
                     );
                   }}
                 />

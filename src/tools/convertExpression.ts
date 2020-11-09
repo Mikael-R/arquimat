@@ -1,6 +1,5 @@
-/* eslint-disable arrow-body-style */
-export const convertToMathExpression = (expression: string) => {
-  return expression
+export const convertToMathExpression = (expression: string) =>
+  expression
     .toLowerCase()
     .split('**')
     .join('^')
@@ -8,10 +7,9 @@ export const convertToMathExpression = (expression: string) => {
     .join('x')
     .split('/')
     .join('÷');
-};
 
-export const convertToJsExpression = (expression: string) => {
-  return expression
+export const convertToJsExpression = (expression: string) =>
+  expression
     .toLowerCase()
     .split('^')
     .join('**')
@@ -19,4 +17,3 @@ export const convertToJsExpression = (expression: string) => {
     .join('*')
     .split('÷')
     .join('/');
-};

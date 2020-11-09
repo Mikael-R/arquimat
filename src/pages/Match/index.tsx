@@ -1,8 +1,4 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-param-reassign */
-/* eslint-disable operator-linebreak */
 import React, { ReactElement, useState } from 'react';
 
 import rocketIcon from '../../assets/icons/rocket.svg';
@@ -119,10 +115,10 @@ function Match(): ReactElement {
   function getCardsContent() {
     const contents: string[] = [];
 
-    customExpressions.forEach((expression) => {
+    customExpressions.forEach(expression => {
       contents.push(
         expression,
-        Calc.calculate(convertToJsExpression(expression)) as string,
+        Calc.calculate(convertToJsExpression(expression)) as string
       );
     });
 
@@ -147,6 +143,7 @@ function Match(): ReactElement {
       <main>
         <section className="memory-game">
           {cardsContent.map((expressionOrResult, index) => (
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div
               key={Number(index)}
               className="memory-card"

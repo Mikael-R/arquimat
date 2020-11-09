@@ -1,9 +1,8 @@
-/* eslint-disable operator-linebreak */
 interface ITimeSince {
   (time: number | Date): string;
 }
 
-const timeSince: ITimeSince = (time) => {
+const timeSince: ITimeSince = time => {
   const seconds =
     typeof time === 'number'
       ? time
