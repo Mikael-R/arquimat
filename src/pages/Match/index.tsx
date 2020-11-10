@@ -18,7 +18,6 @@ const cardFrontFaceIcon =
   cardFrontFaceIcons[randInt(0, cardFrontFaceIcons.length)];
 
 function Match(): ReactElement {
-  const [cardsContent, setCardsContent] = useState<string[]>([]);
   const [showWinModal, setShowWinModal] = useState(false);
 
   const cardsDisable: HTMLDivElement[] = [];
@@ -130,8 +129,6 @@ function Match(): ReactElement {
     return contents.sort(() => 0.5 - Math.random());
   }
 
-  setCardsContent(getCardsContent());
-
   return (
     <div
       className="container"
@@ -141,8 +138,8 @@ function Match(): ReactElement {
       <PageHeader hideBackButton title="" />
 
       <main>
-        <section className="memory-game">
-          {cardsContent.map((expressionOrResult, index) => (
+        <section>
+          {getCardsContent().map((expressionOrResult, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div
               key={Number(index)}
