@@ -276,7 +276,6 @@ function StartMatch(): ReactElement {
               }}
             />
             <CheckBox
-              required
               label="Destacar cards revelados"
               value={preferences.highlightRevealedCards === true ? 1 : 0}
               onChange={() => {
