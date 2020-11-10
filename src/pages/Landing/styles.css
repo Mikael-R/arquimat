@@ -19,7 +19,9 @@
 }
 
 .game-image {
-  width: 100%;
+  width: 96%;
+  height: 50vh;
+  max-height: 380px;
 }
 
 .logo-container {

@@ -15,13 +15,8 @@ const landingImages: string[] = [
   landing2Img,
   landing3Img,
   landing4Img,
-  landing5Img,
+  landing5Img
 ];
-
-sessionStorage.setItem(
-  'landingImgURL',
-  landingImages[randInt(0, landingImages.length)],
-);
 
 function Landing(): ReactElement {
   return (
@@ -33,7 +28,7 @@ function Landing(): ReactElement {
         </div>
 
         <img
-          src={sessionStorage.getItem('landingImgURL') as string}
+          src={landingImages[randInt(0, landingImages.length)]}
           alt="Arquimat"
           className="game-image"
         />
