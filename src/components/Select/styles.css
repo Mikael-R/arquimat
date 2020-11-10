@@ -23,3 +23,9 @@
 .react-dropdown-select-item:hover {
   background-color: #dacef5;
 }
+.react-dropdown-select-content {
+  margin-left: 11px;
+}
+.react-dropdown-select-input {
+  margin: -20px;
+}
