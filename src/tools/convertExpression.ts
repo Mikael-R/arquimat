@@ -1,19 +1,25 @@
+const validChars = ['(', ')', '^', '**', '*', '•', '÷', '/', '+', '-'];
+
 export const convertToMathExpression = (expression: string) =>
   expression
-    .toLowerCase()
+    .split('')
+    .filter(char => validChars.includes(char) || char.match(/[0-9]/))
+    .join('')
     .split('**')
     .join('^')
     .split('*')
-    .join('x')
+    .join('•')
     .split('/')
     .join('÷');
 
 export const convertToJsExpression = (expression: string) =>
   expression
-    .toLowerCase()
+    .split('')
+    .filter(char => validChars.includes(char) || char.match(/[0-9]/))
+    .join('')
     .split('^')
     .join('**')
-    .split('x')
+    .split('•')
     .join('*')
     .split('÷')
     .join('/');
