@@ -20,8 +20,8 @@
 
 .game-image {
   width: 96%;
-  height: 50vh;
-  max-height: 380px;
+  height: 34vh;
+  max-height: 370px;
 }
 
 .logo-container {
@@ -102,7 +102,7 @@
     font-size: 3.6rem;
   }
   .game-image {
-    width: 90%;
+    height: 50vh;
     grid-area: game;
     justify-self: end;
   }
