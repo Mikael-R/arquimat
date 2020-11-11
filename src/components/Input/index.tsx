@@ -4,22 +4,10 @@ import './styles.css';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  shouldBreakLineBetweenLabelAndInput?: boolean;
 }
 
-const Input: React.FC<InputProps> = ({
-  label,
-  shouldBreakLineBetweenLabelAndInput,
-  ...rest
-}: InputProps) => (
-  <div
-    className="input-block"
-    style={
-      shouldBreakLineBetweenLabelAndInput
-        ? { flexDirection: 'column', alignItems: 'flex-start' }
-        : undefined
-    }
-  >
+const Input: React.FC<InputProps> = ({ label, ...rest }: InputProps) => (
+  <div className="input-block">
     <label>{label}</label>
     <input type="text" {...rest} />
   </div>
