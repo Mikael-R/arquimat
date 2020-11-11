@@ -93,44 +93,29 @@ function StartMatch(): ReactElement {
   }
 
   function verifyPreferences(): string | null {
-    const customExpressionHTMLElements = document.getElementsByName(
-      'custom-expression'
+    const customExpressionHTMLElements: HTMLElement[] = Array.prototype.slice.call(
+      document.getElementsByName('custom-expression')
     );
 
-    const customExpressionElements = {
-      invalid: [] as HTMLElement[],
-      infinity: [] as HTMLElement[]
-    };
+    const customExpressionElementInvalid = customExpressionHTMLElements.find(
+      ({ value }: any) =>
+        typeof Calc.calculate(convertToJsExpression(value)) === 'string'
+    );
 
-    customExpressionHTMLElements.forEach(element => {
-      const calculatedResult = Calc.calculate(
-        convertToJsExpression((element as any).value)
-      );
-      if (typeof calculatedResult === 'string') {
-        customExpressionElements.invalid.push(element);
-      }
-      if (calculatedResult === Infinity) {
-        customExpressionElements.infinity.push(element);
-      }
-    });
-
-    const resultMoreThan3Digits =
-      document.getElementById('max-result') ||
-      document.getElementById('min-result');
+    const customExpressionElementInfinity = customExpressionHTMLElements.find(
+      ({ value }: any) =>
+        Calc.calculate(convertToJsExpression(value)) === Infinity
+    );
 
     switch (true) {
-      case !!resultMoreThan3Digits:
-        resultMoreThan3Digits?.focus();
-        return 'Use números com no máximo 3 dígitos.';
-
-      case !!customExpressionElements.invalid.length:
-        customExpressionElements.invalid[0].focus();
+      case !!customExpressionElementInvalid:
+        customExpressionElementInvalid?.focus();
         return Calc.calculate(
-          (customExpressionElements.invalid[0] as any).value
+          convertToJsExpression((customExpressionElementInvalid as any).value)
         ) as string;
 
-      case !!customExpressionElements.infinity.length:
-        customExpressionElements.infinity[0].focus();
+      case !!customExpressionElementInfinity:
+        customExpressionElementInfinity?.focus();
         return 'Expressão customizada não pode conter divisão por 0.';
 
       default:
@@ -268,34 +253,10 @@ function StartMatch(): ReactElement {
               }}
             />
             <Input
-              id="max-result"
               required
               type="number"
-              min={preferences.result.min}
-              max={preferences.result.max}
-              label="Valor máximo de resultado"
-              value={preferences.result.max}
-              onFocus={() => {
-                if (preferences.result.max === '') {
-                  toast.info(
-                    'O resultado das expressões customizadas não são afetadas!'
-                  );
-                  toast.info('Use números com até 3 dígitos!');
-                }
-              }}
-              onChange={({ target }) => {
-                setPreferences({
-                  ...preferences,
-                  result: { ...preferences.result, max: target.value }
-                });
-              }}
-            />
-            <Input
-              id="min-result"
-              required
-              type="number"
-              min={preferences.result.min}
-              max={preferences.result.max}
+              min="-999"
+              max="999"
               label="Valor mínimo de resultado"
               value={preferences.result.min}
               onFocus={() => {
@@ -310,6 +271,28 @@ function StartMatch(): ReactElement {
                 setPreferences({
                   ...preferences,
                   result: { ...preferences.result, min: target.value }
+                });
+              }}
+            />
+            <Input
+              required
+              type="number"
+              min="-999"
+              max="999"
+              label="Valor máximo de resultado"
+              value={preferences.result.max}
+              onFocus={() => {
+                if (preferences.result.max === '') {
+                  toast.info(
+                    'O resultado das expressões customizadas não são afetadas!'
+                  );
+                  toast.info('Use números com até 3 dígitos!');
+                }
+              }}
+              onChange={({ target }) => {
+                setPreferences({
+                  ...preferences,
+                  result: { ...preferences.result, max: target.value }
                 });
               }}
             />
