@@ -21,9 +21,9 @@ const Select: React.FC<SelectProps> = ({
   <div className="select-block">
     <label>{label}</label>
     <SelectDropDown
-      required
       separator
       searchable={false}
+      placeholder=""
       style={{ borderRadius: '0.8rem' }}
       color="var(--color-primary)"
       options={options}

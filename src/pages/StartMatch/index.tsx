@@ -16,13 +16,13 @@ import {
 
 const Calc = new Calculation();
 
-type TDifficulty = 'fácil' | 'médio' | 'difícil' | 'impossível' | '';
+type TMathOperators = '+' | '-' | '•' | '÷' | '^';
 interface IPreferences {
   totalPairs: string;
   flipTime: string;
-  maxResult: string;
+  result: { min: string; max: string };
   highlightRevealedCards: boolean;
-  difficulty: TDifficulty;
+  operators: TMathOperators[];
   customExpressions: string[];
 }
 
@@ -38,9 +38,9 @@ function StartMatch(): ReactElement {
     lastPreferences || {
       totalPairs: '',
       flipTime: '',
-      maxResult: '',
+      result: { min: '', max: '' },
       highlightRevealedCards: false,
-      difficulty: '',
+      operators: [],
       customExpressions: []
     }
   );
@@ -98,7 +98,6 @@ function StartMatch(): ReactElement {
     );
 
     const customExpressionElements = {
-      lessThanOne: [] as HTMLElement[],
       invalid: [] as HTMLElement[],
       infinity: [] as HTMLElement[]
     };
@@ -107,10 +106,6 @@ function StartMatch(): ReactElement {
       const calculatedResult = Calc.calculate(
         convertToJsExpression((element as any).value)
       );
-
-      if (Number(calculatedResult) < 1) {
-        customExpressionElements.lessThanOne.push(element);
-      }
       if (typeof calculatedResult === 'string') {
         customExpressionElements.invalid.push(element);
       }
@@ -119,7 +114,15 @@ function StartMatch(): ReactElement {
       }
     });
 
+    const resultMoreThan3Digits =
+      document.getElementById('max-result') ||
+      document.getElementById('min-result');
+
     switch (true) {
+      case !!resultMoreThan3Digits:
+        resultMoreThan3Digits?.focus();
+        return 'Use números com no máximo 3 dígitos.';
+
       case !!customExpressionElements.invalid.length:
         customExpressionElements.invalid[0].focus();
         return Calc.calculate(
@@ -129,10 +132,6 @@ function StartMatch(): ReactElement {
       case !!customExpressionElements.infinity.length:
         customExpressionElements.infinity[0].focus();
         return 'Expressão customizada não pode conter divisão por 0.';
-
-      case !!customExpressionElements.lessThanOne.length:
-        customExpressionElements.lessThanOne[0].focus();
-        return 'Expressão customizada tem resultado menor que 1.';
 
       default:
         return null;
@@ -235,46 +234,6 @@ function StartMatch(): ReactElement {
                 setPreferences({ ...preferences, flipTime: values[0] });
               }}
             />
-            <Select
-              required
-              label="Dificuldade"
-              options={[
-                { value: 'fácil', label: 'Burro' },
-                { value: 'médio', label: 'Estudante' },
-                { value: 'difícil', label: 'Inteligente' },
-                { value: 'impossível', label: 'Super Dotado' }
-              ]}
-              values={[preferences.difficulty]}
-              onChange={values => {
-                setPreferences({
-                  ...preferences,
-                  difficulty: values[0] as TDifficulty
-                });
-              }}
-            />
-            <Input
-              shouldBreakLineBetweenLabelAndInput
-              required
-              type="number"
-              min="1"
-              max="99"
-              label="Valor máximo de resultado"
-              value={preferences.maxResult}
-              onFocus={() => {
-                if (preferences.maxResult === '') {
-                  toast.info(
-                    'O resultado das expressões customizadas não são afetadas por este resultado!'
-                  );
-                }
-              }}
-              onChange={({ target }) => {
-                if (Number(target.value) > 99 || Number(target.value) < 1) {
-                  toast.warn('Use números maiores que 0 e menores que 100!');
-                } else {
-                  setPreferences({ ...preferences, maxResult: target.value });
-                }
-              }}
-            />
             <CheckBox
               label="Destacar cards revelados"
               value={preferences.highlightRevealedCards === true ? 1 : 0}
@@ -282,6 +241,75 @@ function StartMatch(): ReactElement {
                 setPreferences({
                   ...preferences,
                   highlightRevealedCards: !preferences.highlightRevealedCards
+                });
+              }}
+            />
+          </fieldset>
+
+          <fieldset>
+            <legend>Geração dos cálculos</legend>
+            <Select
+              required
+              multi
+              label="Escolha os operadores"
+              options={[
+                { value: '+', label: '(+) adição' },
+                { value: '-', label: '(-) subtração' },
+                { value: '•', label: '(•) multiplicação' },
+                { value: '÷', label: '(÷) divisão' },
+                { value: '^', label: '(^) exponenciação' }
+              ]}
+              values={preferences.operators}
+              onChange={values => {
+                setPreferences({
+                  ...preferences,
+                  operators: values
+                });
+              }}
+            />
+            <Input
+              id="max-result"
+              required
+              type="number"
+              min={preferences.result.min}
+              max={preferences.result.max}
+              label="Valor máximo de resultado"
+              value={preferences.result.max}
+              onFocus={() => {
+                if (preferences.result.max === '') {
+                  toast.info(
+                    'O resultado das expressões customizadas não são afetadas!'
+                  );
+                  toast.info('Use números com até 3 dígitos!');
+                }
+              }}
+              onChange={({ target }) => {
+                setPreferences({
+                  ...preferences,
+                  result: { ...preferences.result, max: target.value }
+                });
+              }}
+            />
+            <Input
+              id="min-result"
+              required
+              type="number"
+              min={preferences.result.min}
+              max={preferences.result.max}
+              label="Valor mínimo de resultado"
+              value={preferences.result.min}
+              onFocus={() => {
+                if (preferences.result.min === '') {
+                  toast.info(
+                    'O resultado das expressões customizadas não são afetadas!'
+                  );
+                  toast.info('Use números com até 3 dígitos!');
+                }
+              }}
+              onChange={({ target }) => {
+                setPreferences({
+                  ...preferences,
+                  result: { ...preferences.result, min: target.value }
                 });
               }}
             />
@@ -297,7 +325,6 @@ function StartMatch(): ReactElement {
             {preferences.customExpressions.map((expression, index) => (
               <div key={Number(index)} className="expression-item">
                 <Input
-                  shouldBreakLineBetweenLabelAndInput
                   name="custom-expression"
                   label={`Expressão ${Number(index) + 1}`}
                   value={expression}
