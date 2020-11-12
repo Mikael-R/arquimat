@@ -18,6 +18,17 @@ const landingImages: string[] = [
   landing5Img
 ];
 
+const landingImgURL = (() => {
+  let url = sessionStorage.getItem('landing-img-URL');
+
+  if (!url) {
+    url = landingImages[randInt(0, landingImages.length)];
+    sessionStorage.setItem('landing-img-URL', url);
+  }
+
+  return url;
+})();
+
 function Landing(): ReactElement {
   return (
     <div id="page-landing">
@@ -27,11 +38,7 @@ function Landing(): ReactElement {
           <h2>Divirta-se aprendendo!</h2>
         </div>
 
-        <img
-          src={landingImages[randInt(0, landingImages.length)]}
-          alt="Arquimat"
-          className="game-image"
-        />
+        <img src={landingImgURL} alt="Arquimat" className="game-image" />
 
         <div className="buttons-container">
           <Link to="/start-match" className="start-match">
