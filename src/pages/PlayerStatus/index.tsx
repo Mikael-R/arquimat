@@ -12,28 +12,28 @@ const Calc = new Calculation();
 
 function PlayerStatus(): ReactElement {
   const cameInLastMatchAsMilliseconds = Number(
-    localStorage.getItem('cameInLastMatchAsMilliseconds')
+    localStorage.getItem('came-in-last-match-as-milliseconds')
   );
 
   const wins = Number(localStorage.getItem('wins')) || 0;
 
-  const totalMatches = Number(localStorage.getItem('totalMatches')) || 0;
+  const totalMatches = Number(localStorage.getItem('total-matches')) || 0;
 
-  const cardsRevealed = localStorage.getItem('cardsRevealed') || 0;
+  const cardsRevealed = localStorage.getItem('cards-revealed') || 0;
 
-  const straightHits = localStorage.getItem('straightHits') || 0;
+  const straightHits = localStorage.getItem('straight-hits') || 0;
 
   const probabilityOfVictory =
     totalMatches !== 0 ? ((wins / totalMatches) * 100).toFixed(0) : 0;
 
   const timeSpentOnAllMatchesInSeconds =
-    Number(localStorage.getItem('timeSpentOnAllMatchesInSeconds')) || 0;
+    Number(localStorage.getItem('time-spent-on-all-matches-in-seconds')) || 0;
 
   const averageMatchDurationInSeconds = timeSpentOnAllMatchesInSeconds
     ? Number((totalMatches / timeSpentOnAllMatchesInSeconds).toFixed(0))
     : 0;
 
-  const lastCustomExpression = localStorage.getItem('lastCustomExpression');
+  const lastCustomExpression = localStorage.getItem('last-custom-expression');
   const lastCustomExpressionCalculated = lastCustomExpression
     ? String(Calc.calculate(convertToJsExpression(lastCustomExpression)))
     : '';
