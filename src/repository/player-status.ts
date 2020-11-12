@@ -25,11 +25,11 @@ const setCardsRevealed = () =>
     String(Number(localStorage.getItem('cards-revealed') || 0) + 1)
   );
 
-const setStraightHits = () =>
-  localStorage.setItem(
-    'straight-hits',
-    String(Number(localStorage.getItem('straight-hits') || 0) + 1)
-  );
+const setStraightHits = (hits: number) => {
+  if (hits > 0 && hits > Number(localStorage.getItem('straight-hits'))) {
+    localStorage.setItem('straight-hits', String(hits));
+  }
+};
 
 const setTimeSpentOnAllMatchesInSeconds = (secondsToAdd: number) =>
   localStorage.setItem(
