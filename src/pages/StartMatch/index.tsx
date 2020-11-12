@@ -8,6 +8,7 @@ import Input from '../../components/Input';
 import PageHeader from '../../components/PageHeader';
 import Select from '../../components/Select';
 import './styles.css';
+import playerStatus from '../../repository/player-status';
 import Calculation from '../../tools/Calculation';
 import {
   convertToJsExpression,
@@ -30,7 +31,7 @@ function StartMatch(): ReactElement {
   const history = useHistory();
 
   const lastPreferences: IPreferences | null = (() => {
-    const data = sessionStorage.getItem('lastPreferences');
+    const data = sessionStorage.getItem('last-preferences');
     return data ? JSON.parse(data) : null;
   })();
 
@@ -123,43 +124,25 @@ function StartMatch(): ReactElement {
     }
   }
 
-  function setCameInLastMatch() {
-    localStorage.setItem(
-      'cameInLastMatchAsMilliseconds',
-      String(new Date().getTime())
-    );
-  }
-
-  function setTotalMatches() {
-    localStorage.setItem(
-      'totalMatches',
-      String(Number(localStorage.getItem('totalMatches') || 0) + 1)
-    );
-  }
-
-  function setLastCustomExpression(expression: string) {
-    localStorage.setItem('lastCustomExpression', expression);
-  }
-
   function handleSubmit(event: FormEvent) {
     const errorMessage = verifyPreferences();
 
     if (errorMessage === null) {
       sessionStorage.setItem(
-        'lastPreferences',
+        'last-preferences',
         JSON.stringify({ ...preferences, customExpressions: [] })
       );
 
       const lastCustomExpression =
         preferences.customExpressions[preferences.customExpressions.length - 1];
 
+      playerStatus.setCameInLastMatch();
+      lastCustomExpression &&
+        playerStatus.setLastCustomExpression(lastCustomExpression);
+
       toast.info(
         'Infelizmente os cards não estão prontos, por que não volta mais tarde?'
       );
-
-      setCameInLastMatch();
-      setTotalMatches();
-      lastCustomExpression && setLastCustomExpression(lastCustomExpression);
 
       history.push('/');
     } else {
