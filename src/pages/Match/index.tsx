@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
 
 import rocketIcon from '../../assets/icons/rocket.svg';
 import smileIcon from '../../assets/icons/smile.svg';
 import PageHeader from '../../components/PageHeader';
+import playerStatus from '../../repository/player-status';
 import Calculation from '../../tools/Calculation';
 import { convertToJsExpression } from '../../tools/convertExpression';
 import randInt from '../../tools/randInt';
@@ -32,6 +33,8 @@ function Match(): ReactElement {
   let lockBoard = false;
   let firstCard: HTMLDivElement | null = null;
   let secondCard: HTMLDivElement | null = null;
+  let matchLastFlip = false;
+  let hits = 0;
 
   function flipCard(target: HTMLDivElement | null) {
     if (lockBoard) return;
@@ -42,6 +45,8 @@ function Match(): ReactElement {
 
     if (highlightRevealedCards) target.style.border = 'solid yellow';
     if (flipTime > 0) unflipCardByTimeout(target, flipTime);
+
+    playerStatus.setCardsRevealed();
 
     if (!hasFlippedCard) {
       hasFlippedCard = true;
@@ -68,7 +73,17 @@ function Match(): ReactElement {
       Calc.calculate(firstCard?.dataset.content as string) ===
       Calc.calculate(secondCard?.dataset.content as string);
 
-    isMatch ? disableCards() : unflipCards();
+    if (isMatch) {
+      if (matchLastFlip) hits += 1;
+      matchLastFlip = true;
+
+      playerStatus.setStraightHits(hits);
+      disableCards();
+    } else {
+      matchLastFlip = false;
+
+      unflipCards();
+    }
   }
 
   function disableCards() {
@@ -101,7 +116,13 @@ function Match(): ReactElement {
 
     const isWin = totalCards === cardsDisable.length;
 
-    if (isWin) setTimeout(() => setShowWinModal(true), 1500);
+    if (isWin) onWin();
+  }
+
+  function onWin() {
+    setTimeout(() => setShowWinModal(true), 1500);
+    playerStatus.setWins();
+    playerStatus.setCameInLastMatch();
   }
 
   function generateRandomExpression() {
@@ -128,6 +149,23 @@ function Match(): ReactElement {
 
     return contents.sort(() => 0.5 - Math.random());
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      const lastCustomExpression =
+        customExpressions[customExpressions.length - 1];
+
+      playerStatus.setTotalMatches();
+      playerStatus.setCameInLastMatch();
+      lastCustomExpression &&
+        playerStatus.setLastCustomExpression(lastCustomExpression);
+
+      setInterval(
+        () => playerStatus.setTimeSpentOnAllMatchesInSeconds(5),
+        5000
+      );
+    }, 10000);
+  });
 
   return (
     <div

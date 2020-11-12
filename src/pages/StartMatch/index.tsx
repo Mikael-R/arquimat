@@ -8,7 +8,6 @@ import Input from '../../components/Input';
 import PageHeader from '../../components/PageHeader';
 import Select from '../../components/Select';
 import './styles.css';
-import playerStatus from '../../repository/player-status';
 import Calculation from '../../tools/Calculation';
 import {
   convertToJsExpression,
@@ -132,13 +131,6 @@ function StartMatch(): ReactElement {
         'last-preferences',
         JSON.stringify({ ...preferences, customExpressions: [] })
       );
-
-      const lastCustomExpression =
-        preferences.customExpressions[preferences.customExpressions.length - 1];
-
-      playerStatus.setCameInLastMatch();
-      lastCustomExpression &&
-        playerStatus.setLastCustomExpression(lastCustomExpression);
 
       toast.info(
         'Infelizmente os cards não estão prontos, por que não volta mais tarde?'
