@@ -13,18 +13,10 @@ import {
   convertToJsExpression,
   convertToMathExpression
 } from '../../tools/convertExpression';
+// import generateQueryString from '../../tools/generateQueryString';
+import { IPreferences } from '../../types';
 
 const Calc = new Calculation();
-
-type TMathOperators = '+' | '-' | '•' | '÷' | '^';
-interface IPreferences {
-  totalPairs: string;
-  flipTime: string;
-  result: { min: string; max: string };
-  highlightRevealedCards: boolean;
-  operators: TMathOperators[];
-  customExpressions: string[];
-}
 
 function StartMatch(): ReactElement {
   const history = useHistory();
@@ -35,14 +27,16 @@ function StartMatch(): ReactElement {
   })();
 
   const [preferences, setPreferences] = useState<IPreferences>(
-    lastPreferences || {
-      totalPairs: '',
-      flipTime: '',
-      result: { min: '', max: '' },
-      highlightRevealedCards: false,
-      operators: [],
-      customExpressions: []
-    }
+    lastPreferences ||
+      ({
+        totalPairs: '',
+        flipTime: '',
+        minResult: '',
+        maxResult: '',
+        highlightRevealedCards: false,
+        operators: [],
+        customExpressions: []
+      } as IPreferences)
   );
 
   function addNewCustomExpression() {
@@ -124,6 +118,7 @@ function StartMatch(): ReactElement {
   }
 
   function handleSubmit(event: FormEvent) {
+    event.preventDefault();
     const errorMessage = verifyPreferences();
 
     if (errorMessage === null) {
@@ -132,14 +127,18 @@ function StartMatch(): ReactElement {
         JSON.stringify({ ...preferences, customExpressions: [] })
       );
 
+      // const query = generateQueryString({
+      //   preferences: JSON.stringify(preferences)
+      // });
+
+      // history.push(`/match?${query}`);
+
       toast.info(
         'Infelizmente os cards não estão prontos, por que não volta mais tarde?'
       );
-
       history.push('/');
     } else {
       toast.error(errorMessage, { bodyStyle: { whiteSpace: 'pre-line' } });
-      event.preventDefault();
     }
   }
 
@@ -156,6 +155,7 @@ function StartMatch(): ReactElement {
             <legend>Regras de jogo</legend>
             <Select
               required
+              multi={false}
               label="Número de pares"
               options={[
                 { value: '3', label: '3 pares' },
@@ -165,19 +165,21 @@ function StartMatch(): ReactElement {
                 { value: '7', label: '7 pares' },
                 { value: '8', label: '8 pares' }
               ]}
-              values={[preferences.totalPairs]}
-              onChange={values => {
+              defaultValues={[preferences.totalPairs]}
+              values={[]}
+              onChange={optionsSelected => {
                 setPreferences({
                   ...preferences,
-                  totalPairs: values[0],
+                  totalPairs: optionsSelected[0].value,
                   customExpressions: customExpressionsByTotalPairs(
-                    Number(values[0])
+                    Number(optionsSelected[0].value)
                   )
                 });
               }}
             />
             <Select
               required
+              multi={false}
               label="Tempo de visualização"
               options={[
                 { value: '-1', label: 'Sem tempo' },
@@ -189,9 +191,13 @@ function StartMatch(): ReactElement {
                 { value: '9', label: '9 segundos' },
                 { value: '10', label: '10 segundos' }
               ]}
-              values={[preferences.flipTime]}
-              onChange={values => {
-                setPreferences({ ...preferences, flipTime: values[0] });
+              defaultValues={[preferences.flipTime]}
+              values={[]}
+              onChange={optionsSelected => {
+                setPreferences({
+                  ...preferences,
+                  flipTime: optionsSelected[0].value
+                });
               }}
             />
             <CheckBox
@@ -219,11 +225,12 @@ function StartMatch(): ReactElement {
                 { value: '÷', label: '(÷) divisão' },
                 { value: '^', label: '(^) exponenciação' }
               ]}
-              values={preferences.operators}
-              onChange={values => {
+              defaultValues={preferences.operators}
+              values={[]}
+              onChange={optionsSelected => {
                 setPreferences({
                   ...preferences,
-                  operators: values
+                  operators: optionsSelected.map(({ value }) => value)
                 });
               }}
             />
@@ -233,19 +240,19 @@ function StartMatch(): ReactElement {
               min="-999"
               max="999"
               label="Valor mínimo de resultado"
-              value={preferences.result.min}
+              value={preferences.minResult}
               onFocus={() => {
-                if (preferences.result.min === '') {
+                if (preferences.minResult === '') {
                   toast.info(
-                    'O resultado das expressões customizadas não são afetadas!'
+                    'O resultado das expressões customizadas não são afetadas!\nUse números com até 3 dígitos!',
+                    { bodyStyle: { whiteSpace: 'pre-line' } }
                   );
-                  toast.info('Use números com até 3 dígitos!');
                 }
               }}
               onChange={({ target }) => {
                 setPreferences({
                   ...preferences,
-                  result: { ...preferences.result, min: target.value }
+                  minResult: target.value
                 });
               }}
             />
@@ -255,19 +262,19 @@ function StartMatch(): ReactElement {
               min="-999"
               max="999"
               label="Valor máximo de resultado"
-              value={preferences.result.max}
+              value={preferences.maxResult}
               onFocus={() => {
-                if (preferences.result.max === '') {
+                if (preferences.maxResult === '') {
                   toast.info(
-                    'O resultado das expressões customizadas não são afetadas!'
+                    'O resultado das expressões customizadas não são afetadas!\nUse números com até 3 dígitos!',
+                    { bodyStyle: { whiteSpace: 'pre-line' } }
                   );
-                  toast.info('Use números com até 3 dígitos!');
                 }
               }}
               onChange={({ target }) => {
                 setPreferences({
                   ...preferences,
-                  result: { ...preferences.result, max: target.value }
+                  maxResult: target.value
                 });
               }}
             />
@@ -280,12 +287,12 @@ function StartMatch(): ReactElement {
                 + Expressão
               </button>
             </legend>
-            {preferences.customExpressions.map((expression, index) => (
+            {preferences.customExpressions.map((value, index) => (
               <div key={Number(index)} className="expression-item">
                 <Input
                   name="custom-expression"
                   label={`Expressão ${Number(index) + 1}`}
-                  value={expression}
+                  value={value}
                   onChange={({ target }) => {
                     addNewCustomExpressionValue(
                       index,
