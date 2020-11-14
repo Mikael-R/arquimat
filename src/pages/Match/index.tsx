@@ -8,26 +8,32 @@ import playerStatus from '../../repository/player-status';
 import Calculation from '../../tools/Calculation';
 import { convertToJsExpression } from '../../tools/convertExpression';
 import randInt from '../../tools/randInt';
+import { IPreferences } from '../../types';
 import winModal from './WinModal';
 
 import './styles.css';
 
 const Calc = new Calculation();
 
-const cardFrontFaceIcons: string[] = [rocketIcon, smileIcon];
+const cardFrontFaceIcons = [rocketIcon, smileIcon];
 const cardFrontFaceIcon =
   cardFrontFaceIcons[randInt(0, cardFrontFaceIcons.length)];
 
 function Match(): ReactElement {
   const [showWinModal, setShowWinModal] = useState(false);
 
-  const cardsDisable: HTMLDivElement[] = [];
   const searchParams = new URLSearchParams(window.location.search);
+  const {
+    highlightRevealedCards = false,
+    flipTime = '',
+    totalPairs = '2',
+    customExpressions = []
+  }: // operators,
+  // maxResult,
+  // minResult
+  IPreferences = JSON.parse(searchParams.get('preferences') || '{}');
 
-  const totalCards = Number(searchParams.get('totalPairs')) * 2 || 2;
-  const flipTime = Number(searchParams.get('flipTime'));
-  const highlightRevealedCards = !!searchParams.get('highlightRevealedCards');
-  const customExpressions = searchParams.getAll('customExpression');
+  const cardsDisable: HTMLDivElement[] = [];
 
   let hasFlippedCard = false;
   let lockBoard = false;
@@ -44,7 +50,7 @@ function Match(): ReactElement {
     target?.classList.add('flip');
 
     if (highlightRevealedCards) target.style.border = 'solid yellow';
-    if (flipTime > 0) unflipCardByTimeout(target, flipTime);
+    if (Number(flipTime) > 0) unflipCardByTimeout(target, Number(flipTime));
 
     playerStatus.setCardsRevealed();
 
@@ -114,7 +120,7 @@ function Match(): ReactElement {
     firstCard = null;
     secondCard = null;
 
-    const isWin = totalCards === cardsDisable.length;
+    const isWin = Number(totalPairs) * 2 === cardsDisable.length;
 
     if (isWin) onWin();
   }
@@ -142,7 +148,7 @@ function Match(): ReactElement {
       );
     });
 
-    while (contents.length < totalCards) {
+    while (contents.length < Number(totalPairs) * 2) {
       const { expression, result } = generateRandomExpression();
       contents.push(expression, result);
     }
@@ -167,6 +173,8 @@ function Match(): ReactElement {
     }, 10000);
   });
 
+  const cardsContent = getCardsContent();
+
   return (
     <div
       className="container"
@@ -176,8 +184,8 @@ function Match(): ReactElement {
       <PageHeader hideBackButton title="" />
 
       <main>
-        <section>
-          {getCardsContent().map((expressionOrResult, index) => (
+        <section className="memory-game">
+          {cardsContent.map((expressionOrResult, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div
               key={Number(index)}
