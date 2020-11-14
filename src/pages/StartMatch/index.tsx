@@ -14,7 +14,7 @@ import {
   convertToMathExpression
 } from '../../tools/convertExpression';
 // import generateQueryString from '../../tools/generateQueryString';
-import { IPreferences } from '../../types';
+import { IPreferences, TMathOperators } from '../../types';
 
 const Calc = new Calculation();
 
@@ -202,7 +202,7 @@ function StartMatch(): ReactElement {
             />
             <CheckBox
               label="Destacar cards revelados"
-              value={preferences.highlightRevealedCards === true ? 1 : 0}
+              checked={preferences.highlightRevealedCards}
               onChange={() => {
                 setPreferences({
                   ...preferences,
@@ -230,7 +230,9 @@ function StartMatch(): ReactElement {
               onChange={optionsSelected => {
                 setPreferences({
                   ...preferences,
-                  operators: optionsSelected.map(({ value }) => value)
+                  operators: optionsSelected.map(
+                    ({ value }) => value as TMathOperators
+                  )
                 });
               }}
             />

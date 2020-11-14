@@ -6,6 +6,6 @@ export interface IPreferences {
   minResult: string;
   maxResult: string;
   highlightRevealedCards: boolean;
-  operators: (TMathOperators | string)[];
+  operators: TMathOperators[];
   customExpressions: string[];
 }
