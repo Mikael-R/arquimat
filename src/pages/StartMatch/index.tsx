@@ -102,6 +102,10 @@ function StartMatch(): ReactElement {
     );
 
     switch (true) {
+      case Number(preferences.maxResult) <= Number(preferences.minResult):
+        document.getElementById('min-result')?.focus();
+        return 'Valor máximo não pode ser menor ou igual ao valor mínimo.';
+
       case !!customExpressionElementInvalid:
         customExpressionElementInvalid?.focus();
         return Calc.calculate(
@@ -237,28 +241,7 @@ function StartMatch(): ReactElement {
               }}
             />
             <Input
-              required
-              type="number"
-              min="-999"
-              max="999"
-              label="Valor mínimo de resultado"
-              value={preferences.minResult}
-              onFocus={() => {
-                if (preferences.minResult === '') {
-                  toast.info(
-                    'O resultado das expressões customizadas não são afetadas!\nUse números com até 3 dígitos!',
-                    { bodyStyle: { whiteSpace: 'pre-line' } }
-                  );
-                }
-              }}
-              onChange={({ target }) => {
-                setPreferences({
-                  ...preferences,
-                  minResult: target.value
-                });
-              }}
-            />
-            <Input
+              id="max-result"
               required
               type="number"
               min="-999"
@@ -277,6 +260,28 @@ function StartMatch(): ReactElement {
                 setPreferences({
                   ...preferences,
                   maxResult: target.value
+                });
+              }}
+            />
+            <Input
+              required
+              type="number"
+              min="-999"
+              max="999"
+              label="Valor mínimo de resultado"
+              value={preferences.minResult}
+              onFocus={() => {
+                if (preferences.minResult === '') {
+                  toast.info(
+                    'O resultado das expressões customizadas não são afetadas!\nUse números com até 3 dígitos!',
+                    { bodyStyle: { whiteSpace: 'pre-line' } }
+                  );
+                }
+              }}
+              onChange={({ target }) => {
+                setPreferences({
+                  ...preferences,
+                  minResult: target.value
                 });
               }}
             />
