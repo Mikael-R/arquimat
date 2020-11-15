@@ -1,4 +1,4 @@
-const validChars = ['(', ')', '^', '**', '*', '•', '÷', '/', '+', '-'];
+const validChars = ['(', ')', '^', '**', '*', '•', '÷', '/', '+', '-', '.'];
 
 export const convertToMathExpression = (expression: string) =>
   expression
