@@ -44,7 +44,10 @@ const generateRandomExpression: IGenerateRandomExpression = (
   x = String(x).split('.').length > 1 ? Number(x.toFixed(2)) : x;
   y = String(y).split('.').length > 1 ? Number(y.toFixed(2)) : y;
 
-  expression = `${x} ${operator} ${y}`;
+  const xStr = x < 0 ? `(${x})` : `${x}`;
+  const yStr = y < 0 ? `(${y})` : `${y}`;
+
+  expression = `${xStr} ${operator} ${yStr}`;
 
   return { x, y, result, expression };
 };
