@@ -30,7 +30,7 @@ function PlayerStatus(): ReactElement {
     Number(localStorage.getItem('time-spent-on-all-matches-in-seconds')) || 0;
 
   const averageMatchDurationInSeconds = timeSpentOnAllMatchesInSeconds
-    ? Number((totalMatches / timeSpentOnAllMatchesInSeconds).toFixed(0))
+    ? Number((timeSpentOnAllMatchesInSeconds / totalMatches).toFixed(0))
     : 0;
 
   const lastCustomExpression = localStorage.getItem('last-custom-expression');
