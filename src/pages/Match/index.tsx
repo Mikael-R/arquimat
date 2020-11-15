@@ -7,6 +7,7 @@ import PageHeader from '../../components/PageHeader';
 import playerStatus from '../../repository/player-status';
 import Calculation from '../../tools/Calculation';
 import { convertToJsExpression } from '../../tools/convertExpression';
+import generateRandomExpression from '../../tools/generateRandomExpression';
 import randInt from '../../tools/randInt';
 import { IPreferences } from '../../types';
 import winModal from './WinModal';
@@ -26,12 +27,12 @@ function Match(): ReactElement {
   const {
     highlightRevealedCards = false,
     flipTime = '',
-    totalPairs = '2',
-    customExpressions = []
-  }: // operators,
-  // maxResult,
-  // minResult
-  IPreferences = JSON.parse(searchParams.get('preferences') || '{}');
+    totalPairs = '3',
+    customExpressions = [],
+    operators = ['+'],
+    maxResult = '100',
+    minResult = '10'
+  }: IPreferences = JSON.parse(searchParams.get('preferences') || '{}');
 
   const cardsDisable: HTMLDivElement[] = [];
 
@@ -42,7 +43,7 @@ function Match(): ReactElement {
   let matchLastFlip = false;
   let hits = 0;
 
-  function flipCard(target: HTMLDivElement | null) {
+  const flipCard = (target: HTMLDivElement | null) => {
     if (lockBoard) return;
     if (target === firstCard || target === null) return;
     if (cardsDisable.includes(target)) return;
@@ -63,18 +64,18 @@ function Match(): ReactElement {
     secondCard = target;
 
     checkForMatch();
-  }
+  };
 
-  function unflipCardByTimeout(card: HTMLDivElement, timeoutInSeconds: number) {
+  const unflipCardByTimeout = (
+    card: HTMLDivElement,
+    timeoutInSeconds: number
+  ) => {
     setTimeout(() => {
-      const isMatch =
-        firstCard?.dataset.content === secondCard?.dataset.content;
-
-      if (!isMatch) card?.classList.remove('flip');
+      if (!cardsDisable.includes(card)) card?.classList.remove('flip');
     }, timeoutInSeconds * 1000);
-  }
+  };
 
-  function checkForMatch() {
+  const checkForMatch = () => {
     const isMatch =
       Calc.calculate(firstCard?.dataset.content as string) ===
       Calc.calculate(secondCard?.dataset.content as string);
@@ -90,9 +91,9 @@ function Match(): ReactElement {
 
       unflipCards();
     }
-  }
+  };
 
-  function disableCards() {
+  const disableCards = () => {
     if (firstCard && secondCard) {
       firstCard.classList.add('flip');
       secondCard.classList.add('flip');
@@ -101,9 +102,9 @@ function Match(): ReactElement {
     }
 
     resetBoard();
-  }
+  };
 
-  function unflipCards() {
+  const unflipCards = () => {
     lockBoard = true;
 
     setTimeout(() => {
@@ -112,9 +113,9 @@ function Match(): ReactElement {
 
       resetBoard();
     }, 1500);
-  }
+  };
 
-  function resetBoard() {
+  const resetBoard = () => {
     hasFlippedCard = false;
     lockBoard = false;
     firstCard = null;
@@ -123,38 +124,40 @@ function Match(): ReactElement {
     const isWin = Number(totalPairs) * 2 === cardsDisable.length;
 
     if (isWin) onWin();
-  }
+  };
 
-  function onWin() {
+  const onWin = () => {
     setTimeout(() => setShowWinModal(true), 1500);
     playerStatus.setWins();
     playerStatus.setCameInLastMatch();
-  }
+  };
 
-  function generateRandomExpression() {
-    const expression = '2 + 2';
-    const result = '4';
-
-    return { expression, result };
-  }
-
-  function getCardsContent() {
+  const getCardsContent = () => {
     const contents: string[] = [];
 
     customExpressions.forEach(expression => {
       contents.push(
         expression,
-        Calc.calculate(convertToJsExpression(expression)) as string
+        String(Calc.calculate(convertToJsExpression(expression)))
       );
     });
 
-    while (contents.length < Number(totalPairs) * 2) {
-      const { expression, result } = generateRandomExpression();
-      contents.push(expression, result);
+    for (
+      let count = 0;
+      contents.length < Number(totalPairs) * 2;
+      count += count === operators.length - 1 ? 0 : 1
+    ) {
+      const { expression, result } = generateRandomExpression(
+        Number(minResult),
+        Number(maxResult),
+        operators[count]
+      );
+
+      contents.push(expression, String(result));
     }
 
     return contents.sort(() => 0.5 - Math.random());
-  }
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -190,7 +193,7 @@ function Match(): ReactElement {
             <div
               key={Number(index)}
               className="memory-card"
-              data-content={expressionOrResult}
+              data-content={convertToJsExpression(expressionOrResult)}
               onClick={({ currentTarget }) => flipCard(currentTarget)}
             >
               <span className="front-face">{expressionOrResult}</span>
