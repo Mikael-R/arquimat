@@ -1,3 +1,21 @@
+#page-match {
+  width: 100vw;
+  height: 100vh;
+}
+#page-match .page-header .header-content {
+  margin-bottom: 6.4rem;
+}
+
+#page-match main {
+  background: var(--color-box-base);
+  width: 100%;
+  max-width: 80rem;
+  border-radius: 0.8rem;
+  margin: -9rem auto 3.2rem;
+  padding-top: 6.4rem;
+  overflow: hidden;
+}
+
 .memory-game {
   width: 640px;
   height: 640px;
@@ -43,24 +61,6 @@
   transform: rotateY(180deg);
   text-align: center;
   line-height: 10;
-}
-
-#page-match {
-  width: 100vw;
-  height: 100vh;
-}
-#page-match .page-header .header-content {
-  margin-bottom: 6.4rem;
-}
-
-#page-match main {
-  background: var(--color-box-base);
-  width: 100%;
-  max-width: 80rem;
-  border-radius: 0.8rem;
-  margin: -9rem auto 3.2rem;
-  padding-top: 6.4rem;
-  overflow: hidden;
 }
 
 @media (min-width: 700px) {

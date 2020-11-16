@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { ReactElement, useState, useEffect } from 'react';
 
@@ -6,8 +7,11 @@ import smileIcon from '../../assets/icons/smile.svg';
 import PageHeader from '../../components/PageHeader';
 import playerStatus from '../../repository/player-status';
 import Calculation from '../../tools/Calculation';
-import { convertToJsExpression } from '../../tools/convertExpression';
-import generateRandomExpression from '../../tools/generateRandomExpression';
+import {
+  convertToJsExpression,
+  convertToMathExpression
+} from '../../tools/convertExpression';
+import generateCardsContent from '../../tools/generateCardsContent';
 import randInt from '../../tools/randInt';
 import { IPreferences } from '../../types';
 import winModal from './WinModal';
@@ -33,6 +37,15 @@ function Match(): ReactElement {
     maxResult = '100',
     minResult = '10'
   }: IPreferences = JSON.parse(searchParams.get('preferences') || '{}');
+
+  let cardsContent = generateCardsContent({
+    minResult,
+    maxResult,
+    totalPairs,
+    operators,
+    customExpressions: customExpressions.map(exp => convertToJsExpression(exp))
+  });
+  cardsContent = cardsContent.map(exp => convertToMathExpression(exp));
 
   const cardsDisable: HTMLDivElement[] = [];
 
@@ -77,8 +90,12 @@ function Match(): ReactElement {
 
   const checkForMatch = () => {
     const isMatch =
-      Calc.calculate(firstCard?.dataset.content as string) ===
-      Calc.calculate(secondCard?.dataset.content as string);
+      Calc.calculate(
+        convertToJsExpression(cardsContent[Number(firstCard?.id)])
+      ) ===
+      Calc.calculate(
+        convertToJsExpression(cardsContent[Number(secondCard?.id)])
+      );
 
     if (isMatch) {
       if (matchLastFlip) hits += 1;
@@ -132,33 +149,6 @@ function Match(): ReactElement {
     playerStatus.setCameInLastMatch();
   };
 
-  const getCardsContent = () => {
-    const contents: string[] = [];
-
-    customExpressions.forEach(expression => {
-      contents.push(
-        expression,
-        String(Calc.calculate(convertToJsExpression(expression)))
-      );
-    });
-
-    for (
-      let count = 0;
-      contents.length < Number(totalPairs) * 2;
-      count += count === operators.length - 1 ? 0 : 1
-    ) {
-      const { expression, result } = generateRandomExpression(
-        Number(minResult),
-        Number(maxResult),
-        operators[count]
-      );
-
-      contents.push(expression, String(result));
-    }
-
-    return contents.sort(() => 0.5 - Math.random());
-  };
-
   useEffect(() => {
     setTimeout(() => {
       const lastCustomExpression =
@@ -176,8 +166,6 @@ function Match(): ReactElement {
     }, 10000);
   });
 
-  const cardsContent = getCardsContent();
-
   return (
     <div
       className="container"
@@ -187,20 +175,19 @@ function Match(): ReactElement {
       <PageHeader hideBackButton title="" />
 
       <main>
-        <section className="memory-game">
+        <div className="memory-game">
           {cardsContent.map((expressionOrResult, index) => (
-            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div
-              key={Number(index)}
+              id={index.toString()}
+              key={index.toString()}
               className="memory-card"
-              data-content={convertToJsExpression(expressionOrResult)}
               onClick={({ currentTarget }) => flipCard(currentTarget)}
             >
               <span className="front-face">{expressionOrResult}</span>
               <img className="back-face" src={cardFrontFaceIcon} alt="Emoji" />
             </div>
           ))}
-        </section>
+        </div>
       </main>
 
       {winModal({ isOpen: showWinModal })}
