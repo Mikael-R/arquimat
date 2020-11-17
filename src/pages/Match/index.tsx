@@ -24,42 +24,52 @@ const cardFrontFaceIcons = [rocketIcon, smileIcon];
 const cardFrontFaceIcon =
   cardFrontFaceIcons[randInt(0, cardFrontFaceIcons.length)];
 
+const searchParams = new URLSearchParams(window.location.search);
+const {
+  highlightRevealedCards = false,
+  flipTime = '',
+  totalPairs = '3',
+  customExpressions = [],
+  operators = ['+'],
+  maxResult = '100',
+  minResult = '10'
+}: IPreferences = JSON.parse(searchParams.get('preferences') || '{}');
+
+const cardsContent = generateCardsContent({
+  minResult,
+  maxResult,
+  totalPairs,
+  operators,
+  customExpressions: customExpressions.map(exp => convertToJsExpression(exp)),
+  sortArray: true,
+  customReturn: expressionOrResult =>
+    convertToMathExpression(expressionOrResult)
+});
+
+const cardsDisable: HTMLDivElement[] = [];
+
+let hasFlippedCard = false;
+let lockBoard = false;
+let firstCard: HTMLDivElement | null = null;
+let secondCard: HTMLDivElement | null = null;
+let matchLastFlip = false;
+let hits = 0;
+
 function Match(): ReactElement {
   const [showWinModal, setShowWinModal] = useState(false);
-
-  const searchParams = new URLSearchParams(window.location.search);
-  const {
-    highlightRevealedCards = false,
-    flipTime = '',
-    totalPairs = '3',
-    customExpressions = [],
-    operators = ['+'],
-    maxResult = '100',
-    minResult = '10'
-  }: IPreferences = JSON.parse(searchParams.get('preferences') || '{}');
-
-  let cardsContent = generateCardsContent({
-    minResult,
-    maxResult,
-    totalPairs,
-    operators,
-    customExpressions: customExpressions.map(exp => convertToJsExpression(exp))
-  });
-  cardsContent = cardsContent.map(exp => convertToMathExpression(exp));
-
-  const cardsDisable: HTMLDivElement[] = [];
-
-  let hasFlippedCard = false;
-  let lockBoard = false;
-  let firstCard: HTMLDivElement | null = null;
-  let secondCard: HTMLDivElement | null = null;
-  let matchLastFlip = false;
-  let hits = 0;
+  const [currentCardsText, setCurrentCardsText] = useState<{
+    [cardID: string]: string;
+  }>({});
 
   const flipCard = (target: HTMLDivElement | null) => {
     if (lockBoard) return;
     if (target === firstCard || target === null) return;
     if (cardsDisable.includes(target)) return;
+
+    setCurrentCardsText({
+      ...currentCardsText,
+      [target.id]: cardsContent[Number(target.id)]
+    });
 
     target?.classList.add('flip');
 
@@ -138,6 +148,8 @@ function Match(): ReactElement {
     firstCard = null;
     secondCard = null;
 
+    setCurrentCardsText({});
+
     const isWin = Number(totalPairs) * 2 === cardsDisable.length;
 
     if (isWin) onWin();
@@ -176,14 +188,16 @@ function Match(): ReactElement {
 
       <main>
         <div className="memory-game">
-          {cardsContent.map((expressionOrResult, index) => (
+          {cardsContent.map((_, index) => (
             <div
               id={index.toString()}
               key={index.toString()}
               className="memory-card"
               onClick={({ currentTarget }) => flipCard(currentTarget)}
             >
-              <span className="front-face">{expressionOrResult}</span>
+              <span className="front-face">
+                {convertToMathExpression(currentCardsText[index] || '')}
+              </span>
               <img className="back-face" src={cardFrontFaceIcon} alt="Emoji" />
             </div>
           ))}
