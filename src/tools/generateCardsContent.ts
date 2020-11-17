@@ -8,13 +8,17 @@ interface IGetCardsContent {
     maxResult,
     totalPairs,
     operators,
-    customExpressions
+    customExpressions,
+    sortArray,
+    customReturn
   }: {
     minResult: string | number;
     maxResult: string | number;
     totalPairs: string | number;
     operators: TMathOperators[];
-    customExpressions: string[];
+    customExpressions?: string[];
+    sortArray?: boolean;
+    customReturn?: (value: string, index: number, array: string[]) => any;
   }): string[];
 }
 
@@ -25,11 +29,13 @@ const getCardsContent: IGetCardsContent = ({
   maxResult,
   totalPairs,
   operators,
-  customExpressions
+  customExpressions,
+  sortArray,
+  customReturn
 }) => {
   let contents: string[] = [];
 
-  customExpressions.forEach(expression => {
+  customExpressions?.forEach(expression => {
     contents.push(expression, String(Calc.calculate(expression)));
   });
 
@@ -47,7 +53,9 @@ const getCardsContent: IGetCardsContent = ({
     contents.push(expression, String(result));
   }
 
-  contents = contents.sort(() => 0.5 - Math.random());
+  if (customReturn) contents = contents.map(customReturn);
+
+  if (sortArray) contents = contents.sort(() => 0.5 - Math.random());
 
   return contents;
 };
