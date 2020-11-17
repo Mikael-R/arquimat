@@ -13,7 +13,7 @@ import {
   convertToJsExpression,
   convertToMathExpression
 } from '../../tools/convertExpression';
-// import generateQueryString from '../../tools/generateQueryString';
+import generateQueryString from '../../tools/generateQueryString';
 import { IPreferences, TMathOperators } from '../../types';
 
 const Calc = new Calculation();
@@ -131,16 +131,15 @@ function StartMatch(): ReactElement {
         JSON.stringify({ ...preferences, customExpressions: [] })
       );
 
-      // const query = generateQueryString({
-      //   preferences: JSON.stringify(preferences)
-      // });
-
-      // history.push(`/match?${query}`);
+      const query = generateQueryString({
+        preferences: JSON.stringify(preferences)
+      });
 
       toast.info(
-        'Infelizmente os cards não estão prontos, por que não volta mais tarde?'
+        'Infelizmente os cards não estão totalmente prontos, mas aproveite!'
       );
-      history.push('/');
+
+      history.push(`/match?${query}`);
     } else {
       toast.error(errorMessage, { bodyStyle: { whiteSpace: 'pre-line' } });
     }
