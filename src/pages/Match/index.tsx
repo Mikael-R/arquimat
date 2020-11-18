@@ -24,67 +24,62 @@ const cardFrontFaceIcons = [rocketIcon, smileIcon];
 const cardFrontFaceIcon =
   cardFrontFaceIcons[randInt(0, cardFrontFaceIcons.length)];
 
-const searchParams = new URLSearchParams(window.location.search);
-const {
-  highlightRevealedCards = false,
-  flipTime = '',
-  totalPairs = '3',
-  customExpressions = [],
-  operators = ['+'],
-  maxResult = '100',
-  minResult = '10'
-}: IPreferences = JSON.parse(searchParams.get('preferences') || '{}');
-
-const cardsContent = generateCardsContent({
-  minResult,
-  maxResult,
-  totalPairs,
-  operators,
-  customExpressions: customExpressions.map(exp => convertToJsExpression(exp)),
-  sortArray: true,
-  customReturn: expressionOrResult =>
-    convertToMathExpression(expressionOrResult)
-});
-
-const cardsDisable: HTMLDivElement[] = [];
-
-let hasFlippedCard = false;
-let lockBoard = false;
-let firstCard: HTMLDivElement | null = null;
-let secondCard: HTMLDivElement | null = null;
-let matchLastFlip = false;
-let hits = 0;
-
 function Match(): ReactElement {
   const [showWinModal, setShowWinModal] = useState(false);
-  const [currentCardsText, setCurrentCardsText] = useState<{
-    [cardID: string]: string;
-  }>({});
 
-  const flipCard = (target: HTMLDivElement | null) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const {
+    highlightRevealedCards = false,
+    flipTime = '',
+    totalPairs = '3',
+    customExpressions = [],
+    operators = ['+'],
+    maxResult = '100',
+    minResult = '10'
+  }: IPreferences = JSON.parse(searchParams.get('preferences') || '{}');
+
+  const cardsContent = generateCardsContent({
+    minResult,
+    maxResult,
+    totalPairs,
+    operators,
+    customExpressions: customExpressions.map(exp => convertToJsExpression(exp)),
+    sortArray: true,
+    customReturn: expressionOrResult =>
+      convertToMathExpression(expressionOrResult)
+  });
+
+  const matchedCards: HTMLDivElement[] = [];
+
+  let hasFlippedCard = false;
+  let lockBoard = false;
+  let firstCard: HTMLDivElement | null = null;
+  let secondCard: HTMLDivElement | null = null;
+  let matchLastFlip = false;
+  let hits = 0;
+
+  const flipCard = (card: EventTarget & HTMLDivElement, cardID: number) => {
     if (lockBoard) return;
-    if (target === firstCard || target === null) return;
-    if (cardsDisable.includes(target)) return;
+    if (card === firstCard) return;
+    if (matchedCards.includes(card)) return;
 
-    setCurrentCardsText({
-      ...currentCardsText,
-      [target.id]: cardsContent[Number(target.id)]
-    });
+    const cardSpan = card.children[0];
+    (cardSpan as HTMLSpanElement).innerText = convertToMathExpression(
+      cardsContent[cardID]
+    );
+    card.classList.add('flip');
 
-    target?.classList.add('flip');
-
-    if (highlightRevealedCards) target.style.border = 'solid yellow';
-    if (Number(flipTime) > 0) unflipCardByTimeout(target, Number(flipTime));
-
+    if (highlightRevealedCards) card.style.border = 'solid yellow';
+    if (Number(flipTime) > 0) unflipCardByTimeout(card, Number(flipTime));
     playerStatus.setCardsRevealed();
 
     if (!hasFlippedCard) {
       hasFlippedCard = true;
-      firstCard = target;
+      firstCard = card;
       return;
     }
 
-    secondCard = target;
+    secondCard = card;
 
     checkForMatch();
   };
@@ -94,17 +89,17 @@ function Match(): ReactElement {
     timeoutInSeconds: number
   ) => {
     setTimeout(() => {
-      if (!cardsDisable.includes(card)) card?.classList.remove('flip');
+      if (!matchedCards.includes(card)) card.classList.remove('flip');
     }, timeoutInSeconds * 1000);
   };
 
   const checkForMatch = () => {
     const isMatch =
       Calc.calculate(
-        convertToJsExpression(cardsContent[Number(firstCard?.id)])
+        convertToJsExpression(firstCard?.children[0].innerHTML || '')
       ) ===
       Calc.calculate(
-        convertToJsExpression(cardsContent[Number(secondCard?.id)])
+        convertToJsExpression(secondCard?.children[0].innerHTML || '')
       );
 
     if (isMatch) {
@@ -125,7 +120,7 @@ function Match(): ReactElement {
       firstCard.classList.add('flip');
       secondCard.classList.add('flip');
 
-      cardsDisable.push(firstCard, secondCard);
+      matchedCards.push(firstCard, secondCard);
     }
 
     resetBoard();
@@ -143,14 +138,24 @@ function Match(): ReactElement {
   };
 
   const resetBoard = () => {
+    const cardsSpan = [
+      firstCard?.children[0] as HTMLSpanElement,
+      secondCard?.children[0] as HTMLSpanElement
+    ];
+
+    if (!matchedCards.includes(firstCard as HTMLDivElement)) {
+      setTimeout(() => {
+        cardsSpan[0].innerText = '';
+        cardsSpan[1].innerText = '';
+      }, 500);
+    }
+
     hasFlippedCard = false;
     lockBoard = false;
     firstCard = null;
     secondCard = null;
 
-    setCurrentCardsText({});
-
-    const isWin = Number(totalPairs) * 2 === cardsDisable.length;
+    const isWin = Number(totalPairs) * 2 === matchedCards.length;
 
     if (isWin) onWin();
   };
@@ -190,14 +195,11 @@ function Match(): ReactElement {
         <div className="memory-game">
           {cardsContent.map((_, index) => (
             <div
-              id={index.toString()}
-              key={index.toString()}
+              key={String(index)}
               className="memory-card"
-              onClick={({ currentTarget }) => flipCard(currentTarget)}
+              onClick={({ currentTarget }) => flipCard(currentTarget, index)}
             >
-              <span className="front-face">
-                {convertToMathExpression(currentCardsText[index] || '')}
-              </span>
+              <span className="front-face" />
               <img className="back-face" src={cardFrontFaceIcon} alt="Emoji" />
             </div>
           ))}
