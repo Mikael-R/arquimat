@@ -10,12 +10,23 @@ interface IGenerateRandomExpression {
   };
 }
 
+const getMultiplesOf = (number: number): number[] => {
+  const multiples: number[] = [];
+
+  for (let count = 1; number >= count; count += 1) {
+    if (number % count === 0) multiples.push(count);
+  }
+
+  return multiples;
+};
+
 const generateRandomExpression: IGenerateRandomExpression = (
   minResult,
   maxResult,
   operator
 ) => {
   const result = randInt(minResult, maxResult);
+  const multiples = getMultiplesOf(result);
   let expression = '';
   let x = 0;
   let y = 0;
@@ -29,11 +40,11 @@ const generateRandomExpression: IGenerateRandomExpression = (
     x = result + y;
   }
   if (operator === '•') {
-    y = randInt(1, 10);
+    y = multiples[randInt(0, multiples.length)];
     x = result / y;
   }
   if (operator === '÷') {
-    y = randInt(1, 10);
+    y = multiples[randInt(0, multiples.length)];
     x = result * y;
   }
   if (operator === '^') {
