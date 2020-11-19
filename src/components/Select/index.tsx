@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import SelectDropDown, {
   SelectProps as SelectDropDownProps
 } from 'react-dropdown-select';
@@ -41,4 +41,4 @@ const Select: React.FC<ISelectProps> = ({
   );
 };
 
-export default Select;
+export default memo(Select);

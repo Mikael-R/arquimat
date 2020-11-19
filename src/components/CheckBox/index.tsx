@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from 'react';
+import React, { memo, InputHTMLAttributes } from 'react';
 
 import './styles.css';
 
@@ -25,4 +25,4 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   </div>
 );
 
-export default CheckBox;
+export default memo(CheckBox);
