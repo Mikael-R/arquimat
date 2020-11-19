@@ -147,7 +147,7 @@ function Match(): ReactElement {
       setTimeout(() => {
         cardsSpan[0].innerText = '';
         cardsSpan[1].innerText = '';
-      }, 500);
+      }, 1000);
     }
 
     hasFlippedCard = false;
@@ -167,20 +167,17 @@ function Match(): ReactElement {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      const lastCustomExpression =
-        customExpressions[customExpressions.length - 1];
+    if (showWinModal) return;
 
-      playerStatus.setTotalMatches();
-      playerStatus.setCameInLastMatch();
-      lastCustomExpression &&
-        playerStatus.setLastCustomExpression(lastCustomExpression);
+    const lastCustomExpression =
+      customExpressions[customExpressions.length - 1];
 
-      setInterval(
-        () => playerStatus.setTimeSpentOnAllMatchesInSeconds(5),
-        5000
-      );
-    }, 10000);
+    playerStatus.setTotalMatches();
+    playerStatus.setCameInLastMatch();
+    lastCustomExpression &&
+      playerStatus.setLastCustomExpression(lastCustomExpression);
+
+    setInterval(() => playerStatus.setTimeSpentOnAllMatchesInSeconds(5), 5000);
   });
 
   return (
