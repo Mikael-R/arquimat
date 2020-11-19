@@ -165,9 +165,7 @@ function StartMatch(): ReactElement {
                 { value: '3', label: '3 pares' },
                 { value: '4', label: '4 pares' },
                 { value: '5', label: '5 pares' },
-                { value: '6', label: '6 pares' },
-                { value: '7', label: '7 pares' },
-                { value: '8', label: '8 pares' }
+                { value: '6', label: '6 pares' }
               ]}
               defaultValues={[preferences.totalPairs]}
               values={[]}
