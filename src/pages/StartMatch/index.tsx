@@ -161,6 +161,7 @@ function StartMatch(): ReactElement {
               multi={false}
               label="Número de pares"
               options={[
+                { value: '2', label: '2 pares' },
                 { value: '3', label: '3 pares' },
                 { value: '4', label: '4 pares' },
                 { value: '5', label: '5 pares' },

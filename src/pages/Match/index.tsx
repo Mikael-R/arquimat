@@ -31,7 +31,7 @@ function Match(): ReactElement {
   const {
     highlightRevealedCards = false,
     flipTime = '',
-    totalPairs = '3',
+    totalPairs = '2',
     customExpressions = [],
     operators = ['+'],
     maxResult = '100',
